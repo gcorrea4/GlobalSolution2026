@@ -19,13 +19,15 @@ import { FormularioContato } from '../pages/FormularioContato';
 import { Prontuario } from '../pages/Prontuario';
 import { Doador } from '../pages/Doador';
 import { TicketPublico } from '../pages/TicketPublico';
-import {ApoloniasDoBem} from "../pages/ApoloniasDoBem";
+import { ApoloniasDoBem } from '../pages/ApoloniasDoBem';
+import { Integrantes } from '../pages/Integrantes';
+import { Consultas } from '../pages/Consultas';
+import { Regioes } from '../pages/Regioes';
 import { ScrollToTop } from '../components/ScrollToTop';
 
-// Layout com Header + Footer para páginas públicas e utilitários
 function PublicLayout() {
   return (
-    <div className="min-h-screen flex flex-col bg-[#F5F5DC]">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-slate-900">
       <Header />
       <div className="flex-grow"><Outlet /></div>
       <Footer />
@@ -33,21 +35,6 @@ function PublicLayout() {
   );
 }
 
-/**
- * Roteamento da aplicação Turma do Bem.
- *
- * Auth centralizada em <ProtectedRoute> — verifica sessão e role antes
- * de renderizar cada dashboard, redirecionando para /login se necessário.
- *
- * Grupos de rotas:
- *   PublicLayout   → /, /faq, /quem-somos, /sobre, /reconhecimentos,
- *                    /contato, /formulario, /cadastro, /login, /Doador,
- *                    /Calculadora/Score, /FormularioContato, /prontuario/:nome
- *   Dashboards     → /dashboard/admin    (role: admin | dev)
- *                    /dashboard/dentista (role: dentista | dev)
- *                    /dashboard/paciente (role: paciente)
- *                    Sem Header/Footer — navegação via sidebar própria.
- */
 export function AppRoutes() {
   return (
     <BrowserRouter>
@@ -60,7 +47,11 @@ export function AppRoutes() {
           <Route path="/reconhecimentos"   element={<Reconhecimentos />} />
           <Route path="/quem-somos"        element={<QuemSomos />} />
           <Route path="/sobre"             element={<Sobre />} />
+          <Route path="/integrantes"       element={<Integrantes />} />
           <Route path="/contato"           element={<Contato />} />
+          <Route path="/consultas"         element={<Consultas />} />
+          <Route path="/regioes"           element={<Regioes />} />
+          <Route path="/apolonias"         element={<ApoloniasDoBem />} />
           <Route path="/formulario"        element={<Formulario />} />
           <Route path="/cadastro"          element={<Cadastro />} />
           <Route path="/login"             element={<Login />} />
@@ -68,15 +59,14 @@ export function AppRoutes() {
           <Route path="/Calculadora/Score" element={<CalculadoraScore />} />
           <Route path="/FormularioContato" element={<FormularioContato />} />
           <Route path="/prontuario/:nome"  element={<Prontuario />} />
-          <Route path="/apolonias" element={<ApoloniasDoBem />} />
         </Route>
 
-        {/* ── Rota pública de acompanhamento de ticket (sem login) ── */}
+        {/* ── Rota pública de acompanhamento de consulta (sem login) ── */}
         <Route path="/ticket/:codigo" element={<TicketPublico />} />
 
         {/* ── Dashboards protegidos — sem Header/Footer ── */}
         <Route path="/dashboard/admin"    element={<ProtectedRoute allowedRoles={['admin', 'dev']}><AdminDashboard /></ProtectedRoute>} />
-        <Route path="/dashboard/dentista" element={<ProtectedRoute allowedRoles={['dentista', 'dev']}><DentistaDashboard /></ProtectedRoute>} />
+        <Route path="/dashboard/medico"   element={<ProtectedRoute allowedRoles={['medico', 'dev']}><DentistaDashboard /></ProtectedRoute>} />
         <Route path="/dashboard/paciente" element={<ProtectedRoute allowedRoles={['paciente']}><PacienteDashboard /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>

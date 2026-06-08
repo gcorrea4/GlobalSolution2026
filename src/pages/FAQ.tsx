@@ -7,29 +7,39 @@ export function FAQ() {
 
   const perguntas = [
     {
-      pergunta: 'O que é este projeto?',
+      pergunta: 'O que é o OrbitalCare?',
       resposta:
-        'Este é um projeto acadêmico desenvolvido por alunos do curso de Análise e Desenvolvimento de Sistemas da FIAP. A plataforma é uma ferramenta de gestão integrada, criada como uma solução para otimizar o fluxo de atendimento e comunicação da ONG Turma do Bem.',
+        'O OrbitalCare é um projeto acadêmico desenvolvido por alunos de Análise e Desenvolvimento de Sistemas da FIAP para a Global Solution 2026/1. A plataforma conecta médicos voluntários a pacientes em regiões remotas do Brasil via telemedicina por satélite, eliminando a barreira geográfica no acesso à saúde.',
     },
     {
       pergunta: 'Qual problema ele resolve?',
       resposta:
-        'A Turma do Bem recebe um grande volume de contatos por diversos canais, o que dificulta o controle. Nossa plataforma busca centralizar as solicitações, automatizar o encaminhamento através do Simulador de Match e permitir o acompanhamento de cada caso.',
+        'Mais de 33 milhões de brasileiros vivem em municípios com déficit crítico de médicos. Em regiões rurais, indígenas e ribeirinhas, consultas médicas exigem deslocamentos de centenas de quilômetros. O OrbitalCare usa conectividade via satélite para levar teleconsultas diretamente a essas comunidades, de forma gratuita e acessível.',
+    },
+    {
+      pergunta: 'Como funciona a conexão via satélite?',
+      resposta:
+        'A plataforma se integra com infraestrutura de conectividade satelital (LEO/GEO) para garantir acesso à internet em regiões sem cobertura 3G/4G ou fibra. Terminais satelitais compactos são instalados nas comunidades, permitindo videochamadas com qualidade suficiente para teleconsultas médicas mesmo em áreas remotas.',
     },
     {
       pergunta: 'Quais tecnologias foram utilizadas?',
       resposta:
-        'A solução integra React + TypeScript para o Front-End, Java (Quarkus) para o Back-End, Oracle Database para armazenamento seguro e uma integração com a API Gemini para a triagem inicial inteligente.',
+        'O OrbitalCare usa React + TypeScript no frontend, Java/Quarkus no backend, Oracle Database para persistência e integração com a API Gemini para triagem inteligente. O mapa de regiões usa Leaflet.js e a autenticação é baseada em JWT com controle de roles (admin, médico, paciente).',
     },
     {
-      pergunta: 'Este sistema já está em uso pela Turma do Bem?',
+      pergunta: 'O sistema já está em operação?',
       resposta:
-        'Atualmente, o projeto é um protótipo funcional (MVP — Mínimo Produto Viável) desenvolvido para o Challenge da FIAP. Ele serve como uma prova de conceito e demonstra como a tecnologia pode ser aplicada para solucionar o desafio.',
+        'Atualmente o OrbitalCare é um MVP funcional desenvolvido para a Global Solution FIAP 2026/1. Ele serve como prova de conceito e demonstra como a tecnologia espacial e a telemedicina podem ser combinadas para resolver um problema real de saúde pública no Brasil.',
     },
     {
-      pergunta: 'Como posso saber mais sobre a Turma do Bem ou ajudar?',
+      pergunta: 'Como posso me cadastrar como médico voluntário?',
       resposta:
-        'A Turma do Bem é a maior rede de voluntariado especializado do mundo! Para conhecer mais sobre o trabalho, fazer doações ou se voluntariar, recomendamos visitar o site oficial da organização em turmadobem.org.br.',
+        'Acesse a página de Cadastro, selecione o perfil "Médico" e preencha seus dados profissionais, incluindo CRM e especialidade. Após a validação das credenciais pela equipe, você terá acesso ao painel de médico para aceitar teleconsultas de pacientes em regiões remotas.',
+    },
+    {
+      pergunta: 'Pacientes de qualquer região podem usar o serviço?',
+      resposta:
+        'Sim, o serviço é voltado prioritariamente para pacientes em municípios com baixa cobertura de serviços de saúde, especialmente zonas rurais, comunidades indígenas e áreas ribeirinhas. O algoritmo de triagem prioriza automaticamente regiões com maior déficit de acesso.',
     },
   ];
 
@@ -37,7 +47,7 @@ export function FAQ() {
     <main className="min-h-screen bg-white dark:bg-slate-900 font-sans transition-colors duration-300">
 
       {/* ── Hero ── */}
-      <div className="bg-gradient-to-br from-[#FF8C00] via-[#F5820A] to-[#E06000] pt-24 pb-20 px-4 relative overflow-hidden">
+      <div className="bg-gradient-to-br from-[#0EA5E9] via-sky-500 to-sky-700 pt-24 pb-20 px-4 relative overflow-hidden">
         <div className="absolute -right-20 -top-20 w-72 h-72 bg-white/10 rounded-full pointer-events-none" />
         <div className="absolute -left-10 bottom-0 w-56 h-56 bg-white/10 rounded-full pointer-events-none" />
         <div className="max-w-3xl mx-auto text-center relative z-10">
@@ -61,9 +71,9 @@ export function FAQ() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-orange-100 text-lg max-w-xl mx-auto"
+            className="text-sky-100 text-lg max-w-xl mx-auto"
           >
-            Tudo que você precisa saber sobre a plataforma e a Turma do Bem.
+            Tudo que você precisa saber sobre o OrbitalCare e a telemedicina via satélite.
           </motion.p>
         </div>
       </div>
@@ -83,12 +93,12 @@ export function FAQ() {
                 onClick={() => setAberto(aberto === index ? null : index)}
                 className={`w-full text-left px-6 py-5 font-bold flex items-center justify-between gap-4 transition-all duration-200 ${
                   aberto === index
-                    ? 'bg-[#FF8C00] text-white shadow-lg shadow-orange-200'
+                    ? 'bg-[#0EA5E9] text-white shadow-lg shadow-sky-200'
                     : 'bg-gray-50 dark:bg-slate-800 text-gray-800 dark:text-slate-100 hover:bg-gray-100 dark:hover:bg-slate-700 border border-gray-100 dark:border-slate-700'
                 } rounded-2xl`}
               >
                 <span className="text-base leading-snug flex items-center gap-3">
-                  <span className={`text-sm font-black opacity-50 w-5 flex-shrink-0 ${aberto === index ? 'text-white' : 'text-orange-500'}`}>
+                  <span className={`text-sm font-black opacity-50 w-5 flex-shrink-0 ${aberto === index ? 'text-white' : 'text-sky-500'}`}>
                     {String(index + 1).padStart(2, '0')}
                   </span>
                   {item.pergunta}
@@ -109,7 +119,7 @@ export function FAQ() {
                     transition={{ duration: 0.25, ease: 'easeInOut' }}
                     className="overflow-hidden"
                   >
-                    <div className="px-6 py-5 bg-orange-50 dark:bg-orange-950/30 rounded-b-2xl border-x border-b border-orange-100 dark:border-orange-900/40 text-gray-600 dark:text-slate-300 leading-relaxed text-[15px]">
+                    <div className="px-6 py-5 bg-sky-50 dark:bg-sky-950/30 rounded-b-2xl border-x border-b border-sky-100 dark:border-sky-900/40 text-gray-600 dark:text-slate-300 leading-relaxed text-[15px]">
                       {item.resposta}
                     </div>
                   </motion.div>
@@ -125,16 +135,16 @@ export function FAQ() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="mt-14 text-center bg-gradient-to-br from-gray-50 dark:from-slate-800 to-orange-50/40 dark:to-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl p-10"
+          className="mt-14 text-center bg-gradient-to-br from-gray-50 dark:from-slate-800 to-sky-50/40 dark:to-slate-800 border border-gray-100 dark:border-slate-700 rounded-3xl p-10"
         >
-          <div className="w-14 h-14 bg-orange-100 dark:bg-orange-900/40 text-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div className="w-14 h-14 bg-sky-100 dark:bg-sky-900/40 text-sky-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <MessageCircle size={28} />
           </div>
           <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">Ainda tem dúvidas?</h3>
           <p className="text-gray-500 dark:text-slate-400 text-sm mb-6">Nossa equipe está pronta para ajudar você.</p>
           <a
             href="/contato"
-            className="inline-flex items-center gap-2 bg-[#FF8C00] hover:bg-[#E67E22] text-white font-bold px-7 py-3.5 rounded-xl transition-colors shadow-md shadow-orange-200"
+            className="inline-flex items-center gap-2 bg-[#0EA5E9] hover:bg-sky-600 text-white font-bold px-7 py-3.5 rounded-xl transition-colors shadow-md shadow-sky-200"
           >
             Fale com o suporte
           </a>

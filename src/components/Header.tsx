@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, LogOut, Heart, Mail, ExternalLink, Sun, Moon } from 'lucide-react';
+import { LayoutDashboard, LogOut, Satellite, Mail, ExternalLink, Sun, Moon } from 'lucide-react';
 import { useDarkMode } from '../hooks/useDarkMode';
 
 export function Header() {
@@ -20,24 +20,24 @@ export function Header() {
 
   let rotaDashboard = '/login';
   if (userRole === 'admin')    rotaDashboard = '/dashboard/admin';
-  else if (userRole === 'dentista') rotaDashboard = '/dashboard/dentista';
+  else if (userRole === 'medico')   rotaDashboard = '/dashboard/medico';
   else if (userRole === 'paciente') rotaDashboard = '/dashboard/paciente';
-  else if (userRole === 'dev')      rotaDashboard = '/dashboard/dentista';
+  else if (userRole === 'dev')      rotaDashboard = '/dashboard/medico';
 
   const isActive = (path: string) => location.pathname === path;
 
   const navLinkClass = (path: string) =>
     `font-semibold text-[15px] transition-colors duration-200 ${
-      isActive(path) ? 'text-[#FF8C00]' : 'text-white/90 hover:text-[#FF8C00]'
+      isActive(path) ? 'text-[#0EA5E9]' : 'text-white/90 hover:text-[#0EA5E9]'
     }`;
 
   const navLinks = [
-    { to: '/',               label: 'Início' },
-    { to: '/quem-somos',     label: 'Quem Somos' },
-    { to: '/sobre',          label: 'Sobre' },
-    { to: '/apolonias',      label: 'Apolônias do Bem' },
-    { to: '/reconhecimentos',label: 'Reconhecimentos' },
-    { to: '/faq',            label: 'FAQ' },
+    { to: '/',           label: 'Início' },
+    { to: '/sobre',      label: 'Sobre' },
+    { to: '/apolonias',  label: 'Missões de Saúde' },
+    { to: '/regioes',    label: 'Regiões' },
+    { to: '/consultas',  label: 'Consultas' },
+    { to: '/faq',        label: 'FAQ' },
   ];
 
   return (
@@ -48,11 +48,11 @@ export function Header() {
         <div className="flex-shrink-0">
           <Link
             to="/"
-            className="text-[22px] md:text-[26px] font-black tracking-tight text-[#FF8C00] hover:text-orange-400 transition-colors flex items-center gap-2"
+            className="text-[22px] md:text-[26px] font-black tracking-tight text-[#0EA5E9] hover:text-sky-400 transition-colors flex items-center gap-2"
             style={{ fontFamily: '"Arial Black", Arial, sans-serif' }}
           >
-            <Heart size={20} className="fill-[#FF8C00]" />
-            Turma do Bem
+            <Satellite size={20} className="text-[#0EA5E9]" />
+            OrbitalCare
           </Link>
         </div>
 
@@ -66,9 +66,9 @@ export function Header() {
 
           {userRole === 'dev' && (
             <div className="flex gap-3 border-l border-white/20 pl-4">
-              <Link to="/dashboard/admin"    className="text-[#FF8C00] font-black text-[13px] hover:text-white transition-colors">👑 Admin</Link>
-              <Link to="/dashboard/dentista" className="text-[#FF8C00] font-black text-[13px] hover:text-white transition-colors">🦷 Dentista</Link>
-              <Link to="/dashboard/paciente" className="text-[#FF8C00] font-black text-[13px] hover:text-white transition-colors">👤 Paciente</Link>
+              <Link to="/dashboard/admin"    className="text-[#0EA5E9] font-black text-[13px] hover:text-white transition-colors">👑 Admin</Link>
+              <Link to="/dashboard/medico"   className="text-[#0EA5E9] font-black text-[13px] hover:text-white transition-colors">🩺 Médico</Link>
+              <Link to="/dashboard/paciente" className="text-[#0EA5E9] font-black text-[13px] hover:text-white transition-colors">👤 Paciente</Link>
             </div>
           )}
         </nav>
@@ -77,17 +77,16 @@ export function Header() {
         <div className="flex items-center gap-3">
           <Link
             to="/contato"
-            className="hidden sm:block text-white/90 hover:text-[#FF8C00] font-semibold text-[14px] transition-colors"
+            className="hidden sm:block text-white/90 hover:text-[#0EA5E9] font-semibold text-[14px] transition-colors"
           >
             Contato
           </Link>
 
           {usuarioLogado ? (
-            /* Usuário logado: pill com nome + dashboard link */
             <div className="hidden md:flex items-center gap-2">
               <Link
                 to={rotaDashboard}
-                className="flex items-center gap-2 bg-[#FF8C00] hover:bg-orange-500 text-white text-[13px] font-bold px-3 py-1.5 rounded-full transition-colors shadow-sm"
+                className="flex items-center gap-2 bg-[#0EA5E9] hover:bg-sky-600 text-white text-[13px] font-bold px-3 py-1.5 rounded-full transition-colors shadow-sm"
               >
                 <div className="w-5 h-5 rounded-full bg-white/30 flex items-center justify-center text-[10px] font-black">
                   {usuarioLogado.charAt(0).toUpperCase()}
@@ -104,19 +103,17 @@ export function Header() {
               </button>
             </div>
           ) : (
-            /* Visitante: botão entrar */
             <Link
               to="/login"
-              className="hidden md:flex items-center gap-1.5 bg-[#FF8C00] hover:bg-orange-500 text-white font-bold text-[13px] px-4 py-1.5 rounded-full transition-colors shadow-sm"
+              className="hidden md:flex items-center gap-1.5 bg-[#0EA5E9] hover:bg-sky-600 text-white font-bold text-[13px] px-4 py-1.5 rounded-full transition-colors shadow-sm"
             >
               Entrar
             </Link>
           )}
 
-          {/* Hambúrguer — sempre visível para acesso ao drawer (conta/impacto) */}
           <button
             onClick={() => setIsMenuOpen(true)}
-            className="flex items-center justify-center text-white/90 hover:text-[#FF8C00] transition-colors p-1"
+            className="flex items-center justify-center text-white/90 hover:text-[#0EA5E9] transition-colors p-1"
             aria-label="Abrir menu"
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-7 h-7">
@@ -138,8 +135,8 @@ export function Header() {
         {/* Drawer header */}
         <div className="flex justify-between items-center border-b border-gray-100 dark:border-slate-700 px-6 py-5">
           <div className="flex items-center gap-2">
-            <Heart size={18} className="fill-[#FF8C00] text-[#FF8C00]" />
-            <span className="font-black text-gray-900 dark:text-white">Turma do Bem</span>
+            <Satellite size={18} className="text-[#0EA5E9]" />
+            <span className="font-black text-gray-900 dark:text-white">OrbitalCare</span>
           </div>
           <button onClick={() => setIsMenuOpen(false)} className="text-gray-400 hover:text-red-500 transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
@@ -154,13 +151,13 @@ export function Header() {
             <p className="text-[11px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-3">Minha Conta</p>
             {usuarioLogado ? (
               <div className="space-y-2">
-                <div className="flex items-center gap-3 p-3 bg-orange-50 rounded-xl border border-orange-100">
-                  <div className="w-9 h-9 rounded-full bg-[#FF8C00] text-white flex items-center justify-center font-black text-sm">
+                <div className="flex items-center gap-3 p-3 bg-sky-50 rounded-xl border border-sky-100">
+                  <div className="w-9 h-9 rounded-full bg-[#0EA5E9] text-white flex items-center justify-center font-black text-sm">
                     {usuarioLogado.charAt(0).toUpperCase()}
                   </div>
                   <div className="min-w-0">
                     <p className="font-bold text-gray-900 text-sm truncate">{usuarioLogado}</p>
-                    <p className="text-xs text-[#FF8C00] font-semibold capitalize">{userRole === 'dev' ? 'Desenvolvedor' : userRole}</p>
+                    <p className="text-xs text-[#0EA5E9] font-semibold capitalize">{userRole === 'dev' ? 'Desenvolvedor' : userRole}</p>
                   </div>
                 </div>
 
@@ -168,7 +165,7 @@ export function Header() {
                   <Link
                     to={rotaDashboard}
                     onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center gap-2 w-full p-3 bg-[#FF8C00] text-white font-bold rounded-xl text-sm hover:bg-[#E67E22] transition-colors"
+                    className="flex items-center gap-2 w-full p-3 bg-[#0EA5E9] text-white font-bold rounded-xl text-sm hover:bg-sky-600 transition-colors"
                   >
                     <LayoutDashboard size={16} /> Meu Painel
                   </Link>
@@ -176,11 +173,11 @@ export function Header() {
                   <div className="space-y-2">
                     {[
                       { to: '/dashboard/admin',    label: '👑 Painel Admin' },
-                      { to: '/dashboard/dentista', label: '🦷 Painel Dentista' },
+                      { to: '/dashboard/medico',   label: '🩺 Painel Médico' },
                       { to: '/dashboard/paciente', label: '👤 Painel Paciente' },
                     ].map(({ to, label }) => (
                       <Link key={to} to={to} onClick={() => setIsMenuOpen(false)}
-                        className="block w-full p-2.5 bg-orange-50 text-[#FF8C00] border border-orange-100 font-bold rounded-xl text-sm text-center hover:bg-orange-100 transition-colors">
+                        className="block w-full p-2.5 bg-sky-50 text-[#0EA5E9] border border-sky-100 font-bold rounded-xl text-sm text-center hover:bg-sky-100 transition-colors">
                         {label}
                       </Link>
                     ))}
@@ -198,7 +195,7 @@ export function Header() {
               <div className="space-y-2">
                 <p className="text-gray-500 text-sm mb-3">Acesse o painel ou crie sua conta.</p>
                 <Link to="/login" onClick={() => setIsMenuOpen(false)}
-                  className="block w-full text-center p-3 bg-[#FF8C00] text-white font-bold rounded-xl text-sm hover:bg-[#E67E22] transition-colors">
+                  className="block w-full text-center p-3 bg-[#0EA5E9] text-white font-bold rounded-xl text-sm hover:bg-sky-600 transition-colors">
                   Entrar
                 </Link>
                 <Link to="/cadastro" onClick={() => setIsMenuOpen(false)}
@@ -220,7 +217,7 @@ export function Header() {
                   onClick={() => setIsMenuOpen(false)}
                   className={`block px-3 py-2.5 rounded-xl font-semibold text-sm transition-colors ${
                     isActive(to)
-                      ? 'bg-orange-50 text-[#FF8C00] border border-orange-100'
+                      ? 'bg-sky-50 text-[#0EA5E9] border border-sky-100'
                       : 'text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white'
                   }`}
                 >
@@ -232,7 +229,7 @@ export function Header() {
                 onClick={() => setIsMenuOpen(false)}
                 className={`block px-3 py-2.5 rounded-xl font-semibold text-sm transition-colors ${
                   isActive('/contato')
-                    ? 'bg-orange-50 text-[#FF8C00] border border-orange-100'
+                    ? 'bg-sky-50 text-[#0EA5E9] border border-sky-100'
                     : 'text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
@@ -241,17 +238,17 @@ export function Header() {
             </div>
           </div>
 
-          {/* Aparência / Modo escuro */}
+          {/* Aparência */}
           <div>
             <p className="text-[11px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider mb-3">Aparência</p>
 
             <button
               onClick={toggleDark}
               aria-label="Alternar modo escuro"
-              className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 hover:border-[#FF8C00]/40 transition-all group"
+              className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-2xl bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700 hover:border-[#0EA5E9]/40 transition-all group"
             >
               <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-xl transition-colors ${isDark ? 'bg-slate-700 text-yellow-300' : 'bg-orange-100 text-orange-500'}`}>
+                <div className={`p-2 rounded-xl transition-colors ${isDark ? 'bg-slate-700 text-yellow-300' : 'bg-sky-100 text-sky-500'}`}>
                   {isDark ? <Moon size={17} /> : <Sun size={17} />}
                 </div>
                 <div className="text-left">
@@ -261,7 +258,7 @@ export function Header() {
                   <p className="text-xs text-gray-400 dark:text-slate-500 mt-0.5">Toque para alternar</p>
                 </div>
               </div>
-              <div className={`relative w-11 h-6 rounded-full transition-colors duration-300 flex-shrink-0 ${isDark ? 'bg-[#FF8C00]' : 'bg-gray-200 group-hover:bg-gray-300'}`}>
+              <div className={`relative w-11 h-6 rounded-full transition-colors duration-300 flex-shrink-0 ${isDark ? 'bg-[#0EA5E9]' : 'bg-gray-200 group-hover:bg-gray-300'}`}>
                 <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-300 ${isDark ? 'translate-x-5' : 'translate-x-0'}`} />
               </div>
             </button>
@@ -275,24 +272,24 @@ export function Header() {
                 <Mail size={15} className="text-gray-400" /> Contato
               </Link>
               <a
-                href="https://turmadobem.org.br"
+                href="https://www.fiap.com.br"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-2 w-full px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
               >
-                <ExternalLink size={15} className="text-gray-400" /> Site Oficial TdB
+                <ExternalLink size={15} className="text-gray-400" /> FIAP
               </a>
             </div>
           </div>
 
-          {/* Doação */}
+          {/* CTA Teleconsulta */}
           <Link
-            to="/Doador"
+            to="/consultas"
             onClick={() => setIsMenuOpen(false)}
-            className="flex items-center gap-2 w-full p-3.5 bg-gradient-to-r from-[#FF8C00] to-orange-500 text-white font-bold rounded-xl text-sm"
+            className="flex items-center gap-2 w-full p-3.5 bg-gradient-to-r from-[#0EA5E9] to-sky-600 text-white font-bold rounded-xl text-sm"
           >
-            <Heart size={16} className="fill-white" />
-            Apoiar a Causa — Seja um Doador
+            <Satellite size={16} />
+            Agendar Teleconsulta
           </Link>
         </div>
       </div>
