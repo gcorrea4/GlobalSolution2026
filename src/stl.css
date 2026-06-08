@@ -1,0 +1,21 @@
+@import 'leaflet/dist/leaflet.css';
+@import "tailwindcss";
+
+/* Ativa dark mode por classe (.dark no <html>) em vez de media query */
+@variant dark (&:where(.dark, .dark *));
+
+/* Estilos base para dark mode */
+@layer base {
+  html.dark {
+    color-scheme: dark;
+  }
+
+  .dark body {
+    background-color: #0f172a;
+    color: #f1f5f9;
+  }
+}
+.dark input[type="date"],
+.dark input[type="time"] {
+  color-scheme: dark;
+}
