@@ -7,6 +7,7 @@ import fotoKay from '../img/foto-kay.jpg';
 interface Integrante {
   nome: string;
   foto: string;
+  objectPosition: string;
   rm: string;
   turma: string;
   github: string;
@@ -18,29 +19,32 @@ const integrantes: Integrante[] = [
   {
     nome: 'Gabriel Correa Souza',
     foto: fotoCorrea,
-    rm: 'RM00000',
-    turma: '2TDSZ',
-    github: 'https://github.com/',
-    linkedin: 'https://linkedin.com/in/',
-    papel: 'Frontend & Arquitetura',
+    objectPosition: 'center 45%',
+    rm: 'RM567903',
+    turma: '1TDSPB',
+    github: 'https://github.com/gcorrea4/',
+    linkedin: 'https://www.linkedin.com/in/gabriel-correa-souza-763135271/',
+    papel: 'Frontend & IA',
   },
   {
     nome: 'Eric',
     foto: fotoEric,
-    rm: 'RM00000',
-    turma: '2TDSZ',
-    github: 'https://github.com/',
-    linkedin: 'https://linkedin.com/in/',
-    papel: 'Backend & Banco de Dados',
+    objectPosition: 'center 18%',
+    rm: 'RM567398',
+    turma: '1TDSPB',
+    github: 'https://github.com/Eric-devops-tech',
+    linkedin: 'https://www.linkedin.com/in/eric-maciel-144058389//',
+    papel: 'Python & Banco de Dados',
   },
   {
     nome: 'Kay',
     foto: fotoKay,
-    rm: 'RM00000',
-    turma: '2TDSZ',
-    github: 'https://github.com/',
-    linkedin: 'https://linkedin.com/in/',
-    papel: 'Mobile & Integração',
+    objectPosition: 'center 25%',
+    rm: 'RM567980',
+    turma: '1TDSPB',
+    github: 'https://github.com/Kayque2012',
+    linkedin: 'https://www.linkedin.com/in/kayque-duarte-b24313361/',
+    papel: 'Java & Business Model ',
   },
 ];
 
@@ -93,54 +97,47 @@ export function Integrantes() {
               className="bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm hover:shadow-xl hover:border-sky-200 dark:hover:border-sky-700/60 transition-all duration-300 overflow-hidden group"
             >
               {/* Foto */}
-              <div className="relative h-56 bg-gradient-to-br from-sky-50 to-sky-100 dark:from-slate-700 dark:to-slate-800 overflow-hidden">
+              <div className="relative h-72 bg-gradient-to-br from-sky-50 to-sky-100 dark:from-slate-700 dark:to-slate-800 overflow-hidden">
                 <img
                   src={integrante.foto}
                   alt={`Foto de ${integrante.nome}`}
-                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  style={{ objectPosition: integrante.objectPosition }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
                 <span className="absolute bottom-3 left-3 bg-[#0EA5E9]/90 text-white text-[11px] font-bold px-3 py-1 rounded-full">
                   {integrante.papel}
                 </span>
               </div>
 
-              {/* Info */}
-              <div className="p-6">
-                <h3 className="text-lg font-black text-gray-900 dark:text-white mb-1 leading-snug">
-                  {integrante.nome}
-                </h3>
-
-                <div className="flex items-center gap-4 mt-3 mb-5">
-                  <div className="bg-gray-50 dark:bg-slate-700 rounded-lg px-3 py-1.5">
-                    <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider">RM</p>
-                    <p className="text-sm font-black text-gray-800 dark:text-slate-100">{integrante.rm}</p>
-                  </div>
-                  <div className="bg-gray-50 dark:bg-slate-700 rounded-lg px-3 py-1.5">
-                    <p className="text-[10px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider">Turma</p>
-                    <p className="text-sm font-black text-gray-800 dark:text-slate-100">{integrante.turma}</p>
-                  </div>
+              {/* Info compacta */}
+              <div className="px-4 py-3 flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <h3 className="text-sm font-black text-gray-900 dark:text-white leading-tight truncate">
+                    {integrante.nome}
+                  </h3>
+                  <p className="text-[11px] text-gray-400 dark:text-slate-500 mt-0.5 font-medium">
+                    {integrante.rm} · {integrante.turma}
+                  </p>
                 </div>
-
-                {/* Links */}
-                <div className="flex gap-3">
+                <div className="flex gap-2 flex-shrink-0">
                   <a
                     href={integrante.github}
                     target="_blank"
                     rel="noreferrer"
                     aria-label={`GitHub de ${integrante.nome}`}
-                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gray-900 dark:bg-slate-700 text-white text-sm font-bold hover:bg-gray-700 dark:hover:bg-slate-600 transition-colors"
+                    className="flex items-center justify-center w-9 h-9 rounded-xl bg-gray-900 dark:bg-slate-700 text-white hover:bg-gray-700 dark:hover:bg-slate-600 transition-colors"
                   >
-                    <GitBranch size={16} /> GitHub
+                    <GitBranch size={15} />
                   </a>
                   <a
                     href={integrante.linkedin}
                     target="_blank"
                     rel="noreferrer"
                     aria-label={`LinkedIn de ${integrante.nome}`}
-                    className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#0077B5] text-white text-sm font-bold hover:bg-[#006097] transition-colors"
+                    className="flex items-center justify-center w-9 h-9 rounded-xl bg-[#0077B5] text-white hover:bg-[#006097] transition-colors"
                   >
-                    <ExternalLink size={16} /> LinkedIn
+                    <ExternalLink size={15} />
                   </a>
                 </div>
               </div>

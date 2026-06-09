@@ -32,12 +32,13 @@ export function Header() {
     }`;
 
   const navLinks = [
-    { to: '/',           label: 'Início' },
-    { to: '/sobre',      label: 'Sobre' },
-    { to: '/apolonias',  label: 'Missões de Saúde' },
-    { to: '/regioes',    label: 'Regiões' },
-    { to: '/consultas',  label: 'Consultas' },
-    { to: '/faq',        label: 'FAQ' },
+    { to: '/',             label: 'Início' },
+    { to: '/sobre',        label: 'Sobre' },
+    { to: '/apolonias',    label: 'Missões de Saúde' },
+    { to: '/regioes',      label: 'Regiões' },
+    { to: '/consultas',    label: 'Consultas' },
+    { to: '/integrantes',  label: 'Equipe' },
+    { to: '/faq',          label: 'FAQ' },
   ];
 
   return (
