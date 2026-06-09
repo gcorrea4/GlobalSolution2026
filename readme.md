@@ -202,13 +202,15 @@ A aplicação consome a API REST desenvolvida na disciplina **Domain Driven Desi
 
 ## 🖼️ Imagens e Screenshots
 
+
+
 **Desktop:**
 
-<img src="src/img/desktop.png>
+![Desktop Screenshot](src/img/desktop.png)
 
 **Mobile:**
 
-<img src="src/img/mobile.png>
+![Mobile Screenshot](src/img/mobile.png)
 
 ---
 
