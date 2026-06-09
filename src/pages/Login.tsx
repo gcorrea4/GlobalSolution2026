@@ -269,15 +269,6 @@ export function Login() {
               Cadastre-se grátis
             </Link>
           </p>
-          <div className="flex items-center gap-2 justify-center border border-slate-800 bg-slate-800/40 rounded-xl py-3 px-4">
-            <Satellite size={13} className="text-sky-500 flex-shrink-0" />
-            <p className="text-sm text-slate-400">
-              Quer apoiar a causa?{' '}
-              <Link to="/Doador" className="text-sky-500 font-black hover:text-sky-400 transition-colors">
-                Seja um Apoiador
-              </Link>
-            </p>
-          </div>
         </div>
       </div>
     </main>

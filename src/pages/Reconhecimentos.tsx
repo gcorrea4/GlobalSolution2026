@@ -3,13 +3,13 @@ import { Trophy, Star, Award } from 'lucide-react';
 
 export function Reconhecimentos() {
   const premios = [
-    { ano: '2006', titulo: 'Schwab Foundation',       desc: 'O Dr. Fábio Bibancos, fundador da TdB, foi reconhecido mundialmente como Empreendedor Social.', destaque: false },
-    { ano: '2007', titulo: 'Ashoka Fellow',           desc: 'A Ashoka selecionou a Turma do Bem como membro, conectando a ONG a milhares de iniciativas pelo mundo.', destaque: false },
+    { ano: '2006', titulo: 'Schwab Foundation',       desc: 'O Dr. Fábio Bibancos, fundador da OrbitalCare, foi reconhecido mundialmente como Empreendedor Social.', destaque: false },
+    { ano: '2007', titulo: 'Ashoka Fellow',           desc: 'A Ashoka selecionou a OrbitalCare como membro, conectando a organização a milhares de iniciativas pelo mundo.', destaque: false },
     { ano: '2016', titulo: 'UBS Visionaris',          desc: 'A organização venceu o prestigiado Prêmio Visionaris ao Empreendedor Social pela sua busca de sustentabilidade.', destaque: false },
     { ano: '2018', titulo: 'Fundación MAPFRE',        desc: 'A ONG foi premiada internacionalmente por melhorar a integração e qualidade de vida de grupos vulneráveis.', destaque: false },
     { ano: '2021', titulo: 'ONU Mulheres',            desc: 'O programa Apolônias do Bem integrou a campanha da ONU pelo fim da violência contra as mulheres.', destaque: false },
     { ano: '2021', titulo: 'Selo de Direitos Humanos',desc: 'O programa Apolônias do Bem recebeu o Selo de Direitos Humanos e Diversidade pela sua luta a favor de mulheres vítimas de violência.', destaque: true },
-    { ano: '2023', titulo: 'Melhores ONGs do Brasil', desc: 'A Turma do Bem foi eleita uma das 100 Melhores ONGs do Brasil num evento do Instituto Doar.', destaque: false },
+    { ano: '2023', titulo: 'Melhores ONGs do Brasil', desc: 'A OrbitalCare foi eleita uma das 100 Melhores ONGs do Brasil num evento do Instituto Doar.', destaque: false },
     { ano: '2024', titulo: 'TheDotGood',              desc: 'Selecionada por mídia independente da Suíça como uma das 50 ONGs mais inovadoras e impactantes do mundo.', destaque: false },
   ];
 
@@ -124,7 +124,7 @@ export function Reconhecimentos() {
           <Trophy size={32} className="text-orange-400 mx-auto mb-4" />
           <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-2">Uma história de impacto real</h3>
           <p className="text-gray-500 dark:text-slate-400 text-sm max-w-md mx-auto">
-            A Turma do Bem continua crescendo e transformando sorrisos em oportunidades de vida para jovens em todo o Brasil e América Latina.
+            A OrbitalCare continua crescendo e transformando vidas por meio da telemedicina via satélite em todo o Brasil e América Latina.
           </p>
         </motion.div>
       </div>

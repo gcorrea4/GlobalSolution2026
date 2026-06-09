@@ -524,10 +524,6 @@ export function Cadastro() {
             Já tem conta?{' '}
             <Link to="/login" className="text-sky-500 font-bold hover:text-sky-400 transition-colors">Faça login</Link>
           </p>
-          <p>
-            Quer apoiar?{' '}
-            <Link to="/doador" className="text-sky-500 font-bold hover:text-sky-400 transition-colors">Seja um Doador</Link>
-          </p>
         </div>
       </div>
     </main>

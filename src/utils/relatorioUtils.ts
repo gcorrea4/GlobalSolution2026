@@ -95,7 +95,7 @@ export function imprimirRelatorio(paciente: PacienteRelatorio, dentista: string)
   doc.setFontSize(16);
   doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
-  doc.text('TURMA DO BEM', 14, 11);
+  doc.text('ORBITALCARE', 14, 11);
 
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
@@ -125,7 +125,7 @@ export function imprimirRelatorio(paciente: PacienteRelatorio, dentista: string)
     doc.setFillColor(...corScore);
     doc.roundedRect(74, 44, 52, 8, 2, 2, 'F');
     doc.setTextColor(255, 255, 255);
-    doc.text(`SCORE TdB: ${score} — ${scoreLabel(score)}`, 100, 49.5, { align: 'center' });
+    doc.text(`SCORE ORBITALCARE: ${score} — ${scoreLabel(score)}`, 100, 49.5, { align: 'center' });
   }
 
   // ── Linha divisória ──────────────────────────────────────────────────────
@@ -148,7 +148,7 @@ export function imprimirRelatorio(paciente: PacienteRelatorio, dentista: string)
       ['Tipo de Dor',    paciente.tipo_dor || '—'],
       ['Renda Familiar', `${paciente.renda} salário(s) mínimo(s)`],
       ['Dias com Dor',   `${paciente.tempo_dor} dias`],
-      ...(score > 0 ? [['Score TdB', `${score} pts — ${scoreLabel(score)}`]] : []),
+      ...(score > 0 ? [['Score OrbitalCare', `${score} pts — ${scoreLabel(score)}`]] : []),
     ],
     headStyles:         { fillColor: rgbOrange(), textColor: [255, 255, 255], fontStyle: 'bold' },
     alternateRowStyles: { fillColor: [255, 250, 245] },

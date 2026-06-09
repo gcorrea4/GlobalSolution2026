@@ -17,10 +17,10 @@ import {
 } from 'lucide-react';
 
 const ENDERECO = {
-  rua: 'Av. Lins de Vasconcelos, 1222',
-  bairro: 'Aclimação',
+  rua: 'Av. Paulista, 1106',
+  bairro: 'Cerqueira César',
   cidade: 'São Paulo - SP',
-  cep: '01538-001',
+  cep: '01310-100',
 };
 
 const MAPA_URL = `https://maps.google.com/maps?q=${encodeURIComponent(

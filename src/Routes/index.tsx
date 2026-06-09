@@ -17,7 +17,6 @@ import { PacienteDashboard } from '../pages/PacienteDashboard';
 import { CalculadoraScore } from '../pages/CalculadoraScore';
 import { FormularioContato } from '../pages/FormularioContato';
 import { Prontuario } from '../pages/Prontuario';
-import { Doador } from '../pages/Doador';
 import { TicketPublico } from '../pages/TicketPublico';
 import { ApoloniasDoBem } from '../pages/ApoloniasDoBem';
 import { Integrantes } from '../pages/Integrantes';
@@ -55,7 +54,6 @@ export function AppRoutes() {
           <Route path="/formulario"        element={<Formulario />} />
           <Route path="/cadastro"          element={<Cadastro />} />
           <Route path="/login"             element={<Login />} />
-          <Route path="/Doador"            element={<Doador />} />
           <Route path="/Calculadora/Score" element={<CalculadoraScore />} />
           <Route path="/FormularioContato" element={<FormularioContato />} />
           <Route path="/prontuario/:nome"  element={<Prontuario />} />

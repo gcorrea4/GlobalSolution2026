@@ -9,7 +9,7 @@ import { TICKET_STATUS_CONFIG } from '../utils/ticketStatusConfig';
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
-const CODIGO_REGEX = /^TDB-\d{4}-(\d{5})$/;
+const CODIGO_REGEX = /^OC-\d{4}-(\d{5})$/;
 
 function extrairId(codigo: string): number | null {
   const match = codigo.match(CODIGO_REGEX);
@@ -107,7 +107,7 @@ export function TicketPublico() {
   if (estado === 'invalido' || estado === 'nao_encontrado') {
     const titulo = estado === 'invalido' ? 'Código inválido' : 'Ticket não encontrado';
     const descricao = estado === 'invalido'
-      ? 'O código informado não está no formato esperado (TDB-AAAA-NNNNN).'
+      ? 'O código informado não está no formato esperado (OC-AAAA-NNNNN).'
       : 'Este ticket não existe ou foi removido. Verifique o código e tente novamente.';
 
     return (

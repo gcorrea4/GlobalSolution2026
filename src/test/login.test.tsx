@@ -27,10 +27,9 @@ describe('Login — renderização', () => {
     expect(screen.getByRole('button', { name: /entrar/i })).toBeInTheDocument();
   });
 
-  it('exibe links para cadastro e apoiador', () => {
+  it('exibe link para cadastro', () => {
     renderLogin();
     expect(screen.getByText(/Cadastre-se grátis/i)).toBeInTheDocument();
-    expect(screen.getByText(/Seja um Apoiador/i)).toBeInTheDocument();
   });
 });
 

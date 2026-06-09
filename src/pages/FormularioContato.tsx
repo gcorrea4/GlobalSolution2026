@@ -58,7 +58,7 @@ export function FormularioContato() {
         <div className="bg-gray-50/50 dark:bg-slate-700/30 pt-16 pb-8 px-8 text-center border-b border-gray-100 dark:border-slate-700">
           <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800 dark:text-white tracking-tight">Fale Conosco</h2>
           <p className="text-gray-500 dark:text-slate-400 text-sm md:text-base mt-2 max-w-md mx-auto">
-            Tem alguma dúvida, quer ser doador ou falar com a ONG? Preencha os campos abaixo e entraremos em contacto.
+            Tem alguma dúvida, quer falar com a equipe OrbitalCare? Preencha os campos abaixo e entraremos em contacto.
           </p>
         </div>
 
@@ -114,7 +114,7 @@ export function FormularioContato() {
                 >
                   <option value="" disabled>Selecione o motivo do contato...</option>
                   <option value="Dúvida Geral">Dúvida Geral</option>
-                  <option value="Quero ser Doador">Quero ser Doador</option>
+                  <option value="Quero ser Médico Voluntário">Quero ser Médico Voluntário</option>
                   <option value="Imprensa">ONG / Comunicação</option>
                   <option value="Parcerias">Parcerias com Clínicas</option>
                   <option value="Outros">Outros</option>

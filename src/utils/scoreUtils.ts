@@ -1,5 +1,5 @@
 /**
- * Lógica de cálculo de score do programa Turma do Bem.
+ * Lógica de cálculo de score OrbitalCare.
  * Extraída para ser reutilizável e testável independentemente do componente.
  */
 

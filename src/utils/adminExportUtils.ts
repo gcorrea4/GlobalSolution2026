@@ -65,7 +65,7 @@ function adicionarCabecalho(doc: jsPDF, titulo: string): void {
   doc.setFontSize(16);
   doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
-  doc.text('TURMA DO BEM', 14, 11);
+  doc.text('ORBITALCARE', 14, 11);
 
   // Subtítulo
   doc.setFontSize(9);
@@ -206,7 +206,7 @@ export function exportarPacientesPDF(pacientes: PacienteExport[]): void {
   });
 
   adicionarRodape(doc, 'Relatório de Pacientes');
-  doc.save('pacientes-turma-do-bem.pdf');
+  doc.save('pacientes-orbitalcare.pdf');
 }
 
 export function exportarPacientesCSV(pacientes: PacienteExport[]): void {
@@ -219,7 +219,7 @@ export function exportarPacientesCSV(pacientes: PacienteExport[]): void {
     p.tipoDor || '',
     labelUrgenciaDor(p.tipoDor ?? ''),
   ]);
-  baixarCSV([cabecalho, ...linhas], 'pacientes-turma-do-bem.csv');
+  baixarCSV([cabecalho, ...linhas], 'pacientes-orbitalcare.csv');
 }
 
 // ─── Exportação de Dentistas ───────────────────────────────────────────────────
@@ -263,7 +263,7 @@ export function exportarDentistasPDF(dentistas: DentistaExport[]): void {
   });
 
   adicionarRodape(doc, 'Relatório de Dentistas');
-  doc.save('dentistas-turma-do-bem.pdf');
+  doc.save('medicos-orbitalcare.pdf');
 }
 
 export function exportarDentistasCSV(dentistas: DentistaExport[]): void {
@@ -274,7 +274,7 @@ export function exportarDentistasCSV(dentistas: DentistaExport[]): void {
     d.cidade,
     d.cro || '',
   ]);
-  baixarCSV([cabecalho, ...linhas], 'dentistas-turma-do-bem.csv');
+  baixarCSV([cabecalho, ...linhas], 'medicos-orbitalcare.csv');
 }
 
 // ─── Exportação de Atendimentos / Agenda ───────────────────────────────────────
@@ -329,7 +329,7 @@ export function exportarAtendimentosPDF(agendamentos: AgendamentoExport[]): void
   });
 
   adicionarRodape(doc, 'Agenda da Rede');
-  doc.save('agenda-turma-do-bem.pdf');
+  doc.save('agenda-orbitalcare.pdf');
 }
 
 export function exportarAtendimentosCSV(agendamentos: AgendamentoExport[]): void {
@@ -343,5 +343,5 @@ export function exportarAtendimentosCSV(agendamentos: AgendamentoExport[]): void
     ag.hora,
     ag.cidade,
   ]);
-  baixarCSV([cabecalho, ...linhas], 'agenda-turma-do-bem.csv');
+  baixarCSV([cabecalho, ...linhas], 'agenda-orbitalcare.csv');
 }

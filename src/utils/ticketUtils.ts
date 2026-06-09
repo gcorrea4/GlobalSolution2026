@@ -2,7 +2,7 @@
 
 export function gerarTicket(id: number): string {
   const ano = new Date().getFullYear();
-  return `TDB-${ano}-${String(id).padStart(5, '0')}`;
+  return `OC-${ano}-${String(id).padStart(5, '0')}`;
 }
 
 // "João Silva Costa" → "João C."  |  "Maria" → "Maria"

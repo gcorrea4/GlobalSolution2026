@@ -27,7 +27,7 @@ export function CalculadoraScore() {
         <div className="p-2 bg-orange-100 dark:bg-orange-950/30 rounded-lg text-[#FF8C00]">
           <Calculator size={20} />
         </div>
-        <h3 className="font-bold text-gray-800 dark:text-white">Simulador de Score TdB</h3>
+        <h3 className="font-bold text-gray-800 dark:text-white">Simulador de Triagem OrbitalCare</h3>
       </div>
 
       <div className="space-y-5">
