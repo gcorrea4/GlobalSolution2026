@@ -66,7 +66,7 @@ function adicionarRodape(doc: jsPDF, dentista: string): void {
     // Texto do rodapé
     doc.setFontSize(8);
     doc.setTextColor(...rgbGray());
-    doc.text('Turma do Bem — Odontologia voluntária para jovens em vulnerabilidade social', 14, pageHeight - 12);
+    doc.text('OrbitalCare — Telemedicina por satélite para regiões remotas', 14, pageHeight - 12);
     doc.text(`Dr(a). ${dentista}  ·  Pág. ${i}/${pageCount}`, pageWidth - 14, pageHeight - 12, { align: 'right' });
   }
 }
@@ -243,7 +243,7 @@ export function imprimirRelatorio(paciente: PacienteRelatorio, dentista: string)
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(...rgbGray());
     doc.text(`Dr(a). ${dentista}`, pageWidth - 52, assinaturaY + 6, { align: 'center' });
-    doc.text('Dentista Voluntário — Turma do Bem', pageWidth - 52, assinaturaY + 12, { align: 'center' });
+    doc.text('Médico Voluntário — OrbitalCare', pageWidth - 52, assinaturaY + 12, { align: 'center' });
   }
 
   // ── Rodapé em todas as páginas ───────────────────────────────────────────

@@ -33,12 +33,12 @@ export function ModalAvaliarPaciente({ paciente, onClose, onAdotar }: Props) {
             <div className="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center text-gray-600 text-xl font-bold border border-gray-200">{paciente.nome.charAt(0)}</div>
             <div>
               <h2 className="text-2xl font-bold text-gray-800">{paciente.nome}</h2>
-              <p className="text-sm font-semibold text-[#FF8C00]">Match: {paciente.score_match}%</p>
+              <p className="text-sm font-semibold text-sky-500">Match: {paciente.score_match}%</p>
             </div>
           </div>
           <div className="space-y-4">
             <div className="grid grid-cols-3 gap-3">
-              <div className="bg-gray-50 p-4 rounded-xl border border-gray-100"><p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Idade</p><p className="text-sm font-bold text-[#FF8C00]">{paciente.idade} anos</p></div>
+              <div className="bg-gray-50 p-4 rounded-xl border border-gray-100"><p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Idade</p><p className="text-sm font-bold text-sky-500">{paciente.idade} anos</p></div>
               <div className="bg-gray-50 p-4 rounded-xl border border-gray-100"><p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Renda</p><p className="text-sm font-bold text-gray-700">{paciente.renda} SM</p></div>
               <div className="bg-gray-50 p-4 rounded-xl border border-gray-100"><p className="text-[10px] font-bold text-gray-400 uppercase mb-1">Tempo Dor</p><p className="text-sm font-bold text-gray-700">{paciente.tempo_dor} dias</p></div>
             </div>
@@ -47,8 +47,8 @@ export function ModalAvaliarPaciente({ paciente, onClose, onAdotar }: Props) {
               <p className="text-sm font-medium text-gray-600">{paciente.telefone || '(11) 90000-0000'}</p>
               <p className="text-sm font-medium text-gray-600 mt-1">{paciente.cidade}, {paciente.pais}</p>
             </div>
-            <button onClick={() => onAdotar(paciente)} className="w-full mt-4 bg-[#FF8C00] text-white font-bold py-3.5 rounded-xl hover:bg-[#E67E22] transition-colors shadow-md flex items-center justify-center gap-2">
-              <Target size={18} /> Adotar Paciente
+            <button onClick={() => onAdotar(paciente)} className="w-full mt-4 bg-[#0EA5E9] text-white font-bold py-3.5 rounded-xl hover:bg-sky-600 transition-colors shadow-md flex items-center justify-center gap-2">
+              <Target size={18} /> Aceitar Paciente
             </button>
           </div>
         </div>

@@ -101,7 +101,7 @@ function adicionarRodape(doc: jsPDF, subtitulo: string): void {
     doc.line(14, pageHeight - 18, pageWidth - 14, pageHeight - 18);
     doc.setFontSize(8);
     doc.setTextColor(...rgbGray());
-    doc.text('Turma do Bem — Odontologia voluntária para jovens em vulnerabilidade social', 14, pageHeight - 12);
+    doc.text('OrbitalCare — Telemedicina por satélite para regiões remotas', 14, pageHeight - 12);
     doc.text(`${subtitulo}  ·  Pág. ${i}/${pageCount}`, pageWidth - 14, pageHeight - 12, { align: 'right' });
   }
 }

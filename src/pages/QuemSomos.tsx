@@ -65,7 +65,7 @@ export function QuemSomos() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-slate-400 text-lg max-w-xl mx-auto"
           >
-            Conheça os desenvolvedores por trás da plataforma Turma do Bem — um projeto acadêmico da FIAP.
+            Conheça os desenvolvedores por trás da plataforma OrbitalCare — um projeto acadêmico da FIAP.
           </motion.p>
         </div>
       </div>

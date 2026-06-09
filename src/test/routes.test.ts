@@ -30,7 +30,7 @@ describe('Routes/index.tsx — rotas essenciais presentes', () => {
     '/login',
     '/cadastro',
     '/dashboard/admin',
-    '/dashboard/dentista',
+    '/dashboard/medico',
     '/dashboard/paciente',
     '/Calculadora/Score',
     '/prontuario/:nome',
@@ -49,7 +49,7 @@ describe('Routes/index.tsx — rotas essenciais presentes', () => {
 describe('Routes/index.tsx — imports', () => {
   it('importa todos os componentes de dashboard', () => {
     expect(routesContent).toContain('AdminDashboard');
-    expect(routesContent).toContain('DentistaDashboard');
+    expect(routesContent).toContain('MedicoDashboard');
     expect(routesContent).toContain('PacienteDashboard');
   });
 

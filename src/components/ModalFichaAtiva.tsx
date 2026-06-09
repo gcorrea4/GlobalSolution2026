@@ -140,12 +140,12 @@ export function ModalFichaAtiva({
               <div className={`p-4 rounded-xl border text-sm ${
                 ofertaAtiva.status === 'confirmado'
                   ? 'bg-green-50 border-green-200'
-                  : 'bg-orange-50 border-orange-200'
+                  : 'bg-sky-50 border-sky-200'
               }`}>
                 <p className="font-bold text-gray-700 flex items-center gap-2 mb-1">
                   {ofertaAtiva.status === 'confirmado'
                     ? <><CheckCircle2 size={16} className="text-green-500" /> Consulta confirmada pelo paciente!</>
-                    : <><Clock size={16} className="text-[#FF8C00]" /> Proposta enviada — aguardando escolha do paciente</>}
+                    : <><Clock size={16} className="text-sky-500" /> Proposta enviada — aguardando escolha do paciente</>}
                 </p>
                 <p className="text-gray-500 text-xs">{ofertaAtiva.procedimento}</p>
                 {ofertaAtiva.status === 'confirmado' && ofertaAtiva.slotEscolhido && (
@@ -209,7 +209,7 @@ export function ModalFichaAtiva({
                 <select
                   value={procedimentoOferta}
                   onChange={e => setProcedimentoOferta(e.target.value)}
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 outline-none focus:border-[#FF8C00] appearance-none cursor-pointer"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 outline-none focus:border-[#0EA5E9] appearance-none cursor-pointer"
                 >
                   <option>Primeira Consulta - Avaliação</option>
                   <option>Restauração (Cárie)</option>
@@ -225,16 +225,16 @@ export function ModalFichaAtiva({
                   <input
                     type="date" min={dataHoje} value={novaData}
                     onChange={e => setNovaData(e.target.value)}
-                    className="flex-1 bg-gray-50 dark:bg-slate-700 dark:text-white dark:border-slate-600 border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#FF8C00]"
+                    className="flex-1 bg-gray-50 dark:bg-slate-700 dark:text-white dark:border-slate-600 border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#0EA5E9]"
                   />
                   <input
                     type="time" value={novaHora}
                     onChange={e => setNovaHora(e.target.value)}
-                    className="w-[110px] bg-gray-50 dark:bg-slate-700 dark:text-white dark:border-slate-600 border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#FF8C00]"
+                    className="w-[110px] bg-gray-50 dark:bg-slate-700 dark:text-white dark:border-slate-600 border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none focus:border-[#0EA5E9]"
                   />
                   <button
                     type="button" onClick={onAdicionarSlot}
-                    className="bg-[#FF8C00] text-white p-2.5 rounded-xl hover:bg-[#E67E22] transition-colors flex-shrink-0"
+                    className="bg-[#0EA5E9] text-white p-2.5 rounded-xl hover:bg-sky-600 transition-colors flex-shrink-0"
                   >
                     <Plus size={18} />
                   </button>
@@ -306,7 +306,7 @@ export function ModalFichaAtiva({
             {ficha.historico && ficha.historico.length > 0 ? (
               ficha.historico.map((item, idx) => (
                 <div key={idx} className="relative pl-6 animate-fade-in">
-                  <div className={`absolute w-5 h-5 rounded-full -left-[11px] top-0.5 border-4 border-white shadow-sm ${item.status === 'Agendado' ? 'bg-[#FF8C00]' : 'bg-[#8dc63f]'}`} />
+                  <div className={`absolute w-5 h-5 rounded-full -left-[11px] top-0.5 border-4 border-white shadow-sm ${item.status === 'Agendado' ? 'bg-[#0EA5E9]' : 'bg-[#8dc63f]'}`} />
                   <p className="text-xs font-bold text-gray-400 mb-1">{item.data}</p>
                   <div className={`p-4 rounded-xl border ${item.status === 'Agendado' ? 'bg-orange-50 border-orange-100' : 'bg-white border-gray-100 shadow-sm'}`}>
                     <div className="flex items-center justify-between mb-1">

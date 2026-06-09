@@ -35,14 +35,14 @@ function TicketHeader() {
       <div className="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
         <Link
           to="/"
-          className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-slate-200 hover:text-orange-500 transition-colors"
+          className="flex items-center gap-2 text-sm font-bold text-gray-700 dark:text-slate-200 hover:text-sky-500 transition-colors"
         >
-          <span className="text-xl font-black text-orange-500">TdB</span>
-          <span className="hidden sm:inline">Turma do Bem</span>
+          <span className="text-xl font-black text-sky-500">Orb</span>
+          <span className="hidden sm:inline">OrbitalCare</span>
         </Link>
         <Link
           to="/login"
-          className="text-xs font-bold text-orange-500 hover:underline flex items-center gap-1"
+          className="text-xs font-bold text-sky-500 hover:underline flex items-center gap-1"
         >
           Entrar <ExternalLink size={11} />
         </Link>
@@ -93,7 +93,7 @@ export function TicketPublico() {
   if (estado === 'carregando') {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-900 font-sans">
-        <title>{`Ticket ${codigo} · Turma do Bem`}</title>
+        <title>{`Ticket ${codigo} · OrbitalCare`}</title>
         <TicketHeader />
         <main className="max-w-2xl mx-auto px-4 py-10 space-y-5">
           <Skeleton variant="text" lines={1} className="w-1/3" />
@@ -112,7 +112,7 @@ export function TicketPublico() {
 
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-900 font-sans">
-        <title>{`${titulo} · Turma do Bem`}</title>
+        <title>{`${titulo} · OrbitalCare`}</title>
         <TicketHeader />
         <main className="max-w-2xl mx-auto px-4 py-10">
           <div className="flex flex-col items-center justify-center text-center py-16 gap-5">
@@ -123,7 +123,7 @@ export function TicketPublico() {
               <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-2">{titulo}</h2>
               <p className="text-gray-500 dark:text-slate-400 text-sm max-w-xs leading-relaxed">{descricao}</p>
             </div>
-            <Link to="/" className="flex items-center gap-1.5 text-sm font-bold text-orange-500 hover:underline">
+            <Link to="/" className="flex items-center gap-1.5 text-sm font-bold text-sky-500 hover:underline">
               <ArrowLeft size={14} /> Voltar ao início
             </Link>
           </div>
@@ -136,7 +136,7 @@ export function TicketPublico() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 font-sans">
-      <title>{`Ticket ${codigo} · Turma do Bem`}</title>
+      <title>{`Ticket ${codigo} · OrbitalCare`}</title>
       <TicketHeader />
       <main className="max-w-2xl mx-auto px-4 py-10">
         <div className="space-y-6 animate-fade-in">
@@ -164,7 +164,7 @@ export function TicketPublico() {
               </p>
               {nomeDentista && (
                 <p className="text-sm text-gray-600 dark:text-slate-300 mt-3 font-medium">
-                  Dentista responsável: <span className="font-bold">{nomeDentista}</span>
+                  Médico responsável: <span className="font-bold">{nomeDentista}</span>
                 </p>
               )}
             </div>
@@ -179,11 +179,11 @@ export function TicketPublico() {
           </div>
 
           {/* Mensagem de acompanhamento + CTA login */}
-          <div className="bg-orange-50 dark:bg-orange-950/20 border border-orange-100 dark:border-orange-900/40 rounded-2xl p-5 text-center">
+          <div className="bg-sky-50 dark:bg-sky-950/20 border border-sky-100 dark:border-sky-900/40 rounded-2xl p-5 text-center">
             <p className="text-sm text-gray-600 dark:text-slate-300 leading-relaxed">
               Acompanhe seu caso aqui sempre que quiser. Para mais detalhes e comunicação
-              com seu dentista,{' '}
-              <Link to="/login" className="font-bold text-orange-500 hover:underline">
+              com seu médico,{' '}
+              <Link to="/login" className="font-bold text-sky-500 hover:underline">
                 faça login na plataforma
               </Link>
               .
