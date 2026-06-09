@@ -112,7 +112,7 @@ export function Cadastro() {
         pais: data.pais, cidade: cidadeFinal, estado: nomeEstado,
       } : {
         nome: data.nome, email: data.email, senha: data.senha,
-        cro: data.documento, tipo: data.tipo,
+        crm: data.documento, tipo: data.tipo,
         pais: data.pais, cidade: cidadeFinal, estado: nomeEstado,
       };
 
@@ -208,7 +208,7 @@ export function Cadastro() {
             <div className="grid grid-cols-2 gap-3">
               {[
                 { value: 'paciente', label: 'Paciente',      sub: 'Preciso de atendimento',  icon: <Users size={20} /> },
-                { value: 'dentista', label: 'Médico',        sub: 'Quero ser voluntário',     icon: <Stethoscope size={20} /> },
+                { value: 'medico',   label: 'Médico',        sub: 'Quero ser voluntário',     icon: <Stethoscope size={20} /> },
               ].map(opt => (
                 <button
                   key={opt.value}
@@ -253,7 +253,7 @@ export function Cadastro() {
             </div>
           )}
 
-          {tipoPerfil === 'dentista' && (
+          {tipoPerfil === 'medico' && (
             <div>
               <label className={labelClass}>CRM</label>
               <input
