@@ -1,368 +1,217 @@
-# 🦷 Dentista na Nuvem — Frontend
+# 🛰️ OrbitalCare — Saúde Acessível Onde o Sinal Chega
 
-> Plataforma digital da **Turma do Bem** — ONG que conecta dentistas voluntários a jovens em vulnerabilidade social e mulheres vítimas de violência doméstica. Interface SPA com 3 painéis especializados (Admin, Dentista, Beneficiário) e sistema de tickets rastreáveis.
-
-![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-Rolldown-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![Tailwind](https://img.shields.io/badge/Tailwind_v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-43_passing-success?style=for-the-badge)
-
----
-
-## 📋 Sumário
-
-- [Visão Geral](#-visão-geral)
-- [Funcionalidades](#-funcionalidades)
-- [Stack Técnica](#-stack-técnica)
-- [Como Rodar Local](#-como-rodar-local)
-- [Credenciais de Demo](#-credenciais-de-demo)
-- [Algoritmo Score TdB](#-algoritmo-score-tdb)
-- [Sistema de Tickets](#-sistema-de-tickets)
-- [Estrutura do Projeto](#-estrutura-do-projeto)
-- [Deploy](#-deploy)
-- [Equipe](#-equipe)
+![Status](https://img.shields.io/static/v1?label=STATUS&message=GLOBAL%20SOLUTION%202026%2F1&color=0EA5E9&style=for-the-badge)
+![React](https://img.shields.io/badge/React-19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Vercel](https://img.shields.io/badge/Deploy-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 
 ---
 
-## 🎯 Visão Geral
+## 📡 Título e Descrição
 
-O **Dentista na Nuvem** centraliza pedidos de atendimento odontológico em **tickets rastreáveis com timeline pública** (estilo Correios), substituindo o fluxo manual de WhatsApp + e-mail que a TdB usa hoje.
+**OrbitalCare** é uma plataforma de telemedicina via satélite desenvolvida como solução para a **Global Solution 2026/1 da FIAP**, com o tema *Economia Espacial*. A proposta conecta médicos voluntários a pacientes em regiões remotas e isoladas do Brasil, utilizando conectividade via satélite como infraestrutura base.
 
-A plataforma se conecta a uma API Quarkus + Oracle ([backend repo →](../dentista-na-nuvem)) e oferece:
+Mais de 33 milhões de brasileiros vivem em municípios com menos de um médico por mil habitantes. O OrbitalCare nasce para eliminar essa barreira geográfica, oferecendo triagem inteligente por urgência clínica e teleconsultas acessíveis, gratuitas e integradas com IA.
 
-- 🎫 **Tickets TDB-YYYY-NNNNN** com timeline visual de cada caso
-- 🤖 **Triagem inteligente** combinando Score TdB determinístico + assistente Gemini
-- 🗺 **Mapa de calor** com React Leaflet mostrando demanda por cidade
-- 📊 **Painel de métricas** operacionais (tempo médio, SLA, top cidades)
-- 🌙 **Dark mode persistente** (sem flash em F5)
-- 📱 **Mobile-first** — funciona em viewport 360px
+A aplicação foi desenvolvida em **React + Vite + TypeScript** com integração à API REST Java (Quarkus) hospedada no Azure e banco de dados Oracle.
 
 ---
 
-## ✨ Funcionalidades
+## 🔗 Como Usar (Links do Projeto)
 
-### Por papel de usuário
-
-#### 👨‍💼 Admin
-- 🗺 **Heatmap de demanda** (Leaflet + leaflet.heat)
-- 📋 **Lista de pacientes/dentistas** com filtros por status do ticket
-- 📊 **Aba Métricas**: 4 KPIs principais + distribuição por status + top cidades/dentistas
-- 💬 **Gestão de contatos** com categorização automática (Apolônias / Voluntariado / Doação)
-- 📤 **Exportação PDF/CSV** de relatórios
-- 🔒 **Soft-delete** com auditoria
-
-#### 🦷 Dentista voluntário
-- 🎯 **Fila de triagem inteligente** ordenada por Score TdB
-- ⏱ **SLA Badge** em cada caso (verde < 48h, amarelo < 96h, vermelho > 96h)
-- 👥 **Meus Pacientes** com TicketBadge de status
-- 📅 **Agenda de consultas** com proposta de horários estilo marketplace
-- 📝 **Prontuário com timeline** completa do ticket
-- 🤖 **Chat com IA** (Gemini) contextualizado para a fila
-
-#### 👧 Beneficiário/Paciente
-- 📋 **Triagem** com 11 campos clínicos + socioeconômicos
-- 🎫 **Número de ticket copiável** (TDB-YYYY-NNNNN)
-- 🕐 **Timeline do caso** mostrando todas as transições
-- 📅 **Recebimento de propostas** de horário com aceite com 1 clique
-- 🔔 **Toast automático** quando status do caso muda
-
-### Páginas públicas
-
-- 🏠 **Landing page** com hero, estatísticas, programas (Dentista do Bem + Apolônias do Bem)
-- ℹ️ **Sobre, FAQ, Quem Somos, Reconhecimentos**
-- 💝 **Doador** com PIX + calculadora de impacto + Nota Fiscal Paulista
-- 📩 **Contato** com chatbot integrado ao Gemini
-- 🎫 **Consulta pública de ticket** em `/ticket/TDB-2026-XXXXX` (sem login, LGPD-safe)
-
----
-
-## 🛠 Stack Técnica
-
-| Categoria | Tecnologia | Versão | Motivação |
-|---|---|---|---|
-| **Framework** | React | 19 | Servidor de UI |
-| **Linguagem** | TypeScript | 5.9 | Tipagem estrita |
-| **Build** | Vite | 8 (Rolldown) | Hot reload instantâneo |
-| **Estilização** | Tailwind CSS | v4 (CSS-first) | Utility-first sem config JS |
-| **Roteamento** | React Router DOM | 7 | SPA com lazy-load |
-| **Forms** | React Hook Form + Zod | 7 / 4 | Validação tipada |
-| **Animações** | Framer Motion | 12 | Transições fluidas |
-| **Mapas** | React Leaflet + leaflet.heat | — | Heatmap geográfico |
-| **Ícones** | Lucide React | — | Stroke icons consistentes |
-| **PDF** | jsPDF + jspdf-autotable | — | Exportação de relatórios |
-| **Toast** | Sonner | — | Notificações não-bloqueantes |
-| **Testes** | Vitest + Testing Library | — | Unitários + integração |
-
-### Integrações externas
-
-| API | Uso |
+| Recurso | Link |
 |---|---|
-| Backend Quarkus | Autenticação, dados, IA, métricas |
-| Nominatim (OSM) | Geocodificação de cidades |
-| OpenRouteService | Rotas para consultas |
-| Google Gemini | Triagem assistida (via backend) |
+| 🌐 **Aplicação online (Vercel)** | https://global-solution2026.vercel.app/ |
+| 💻 **Repositório GitHub (Front-End)** | _em breve_ |
+| 🎥 **Vídeo de apresentação (YouTube)** | _em breve_ |
+| ⚙️ **API Java (Azure)** | https://app-orbitalcare-api.azurewebsites.net |
+| 📋 **Swagger UI** | https://app-orbitalcare-api.azurewebsites.net/q/swagger-ui |
 
----
+### Executar localmente
 
-## 🚀 Como Rodar Local
-
-### Pré-requisitos
-
-- 📦 **Node.js 18+** ([download](https://nodejs.org/))
-- 🦷 **Backend rodando** em `http://localhost:8080` ([instruções no repo do backend](../dentista-na-nuvem))
-
-### Passo 1 — Clonar e instalar
+**Pré-requisito:** [Node.js](https://nodejs.org/) 18+ instalado.
 
 ```bash
-git clone <repo-url>
-cd Challenge-Sprint
+# 1. Clone o repositório
+git clone https://github.com/gcorrea4/global-solution-2026.git
+cd global-solution-2026
+
+# 2. Instale as dependências
 npm install
-```
 
-### Passo 2 — Configurar API local
+# 3. (Opcional) Configure a URL da API para desenvolvimento local
+# Crie um arquivo .env.local na raiz com:
+# VITE_API_URL=http://localhost:8080
+# Sem esse arquivo, a aplicação aponta para a API em produção (Azure).
 
-Crie um arquivo `.env.local` na raiz:
-
-```bash
-echo "VITE_API_URL=http://localhost:8080" > .env.local
-```
-
-> Sem esse arquivo, o frontend aponta para a API em produção (Azure).
-
-### Passo 3 — Rodar em modo desenvolvimento
-
-```bash
+# 4. Inicie o servidor de desenvolvimento
 npm run dev
+
+# 5. Abra http://localhost:5173/ no navegador
 ```
 
-Acesse: **http://localhost:5173**
-
-Você verá um badge laranja **"DEMO"** no header — indicador visual de que está rodando em ambiente local.
-
-### Passo 4 — Build de produção (opcional, para teste)
+### Scripts disponíveis
 
 ```bash
-npm run build && npm run preview
-```
-
-### Scripts úteis
-
-```bash
-npm run dev              # Servidor de desenvolvimento (HMR)
-npm run build            # Build de produção
-npm run preview          # Preview do build
-npm run typecheck        # tsc --noEmit
-npm run lint             # ESLint
-npm run test             # Vitest (43 testes)
-npm run test:watch       # Vitest em watch mode
-npm run test:coverage    # Cobertura
-npm run check            # tsc + eslint + vitest (gate pré-commit)
-npm run coords:update    # Regenera src/data/latamCoordinates.ts via Nominatim
+npm run dev         # servidor de desenvolvimento (Vite)
+npm run build       # build de produção (tsc + vite build)
+npm run preview     # preview do build local
+npm run lint        # ESLint
+npm run typecheck   # checagem de tipos sem emitir
+npm run test        # testes unitários (Vitest)
+npm run check       # tsc + eslint + vitest (pipeline completa)
 ```
 
 ---
 
-## 🔑 Credenciais de Demo
+## 🛠️ Tecnologias Utilizadas
 
-> ℹ️ As credenciais abaixo só funcionam após rodar os `UPDATE`s descritos no README do backend.
-
-| Papel | E-mail | Senha | Dashboard |
-|---|---|---|---|
-| 👨‍💼 **Admin** | `carlos.mendes@demo.com` | `demo123` | `/dashboard/admin` |
-| 🦷 **Dentista** | `ana.lima@demo.com` | `demo123` | `/dashboard/dentista` |
-| 👧 **Paciente** | `mateus.oliveira@demo.com` | `demo123` | `/dashboard/paciente` |
-
-Outros dentistas (cidades diferentes para ver o heatmap funcionando):
-- `pedro.alves@demo.com` (Belo Horizonte)
-- `juliana.torres@demo.com` (Salvador)
-- `rafael.costa@demo.com` (Curitiba)
-- `mariana.souza@demo.com` (Recife)
-
----
-
-## 🧮 Algoritmo Score TdB
-
-Pacientes são priorizados por um **score 0–100** transparente e auditável:
-
-| Critério | Peso | Detalhamento |
-|---|---|---|
-| 🦷 **Gravidade da dor** | 0–45 | Leve (5) · Moderada (15) · Forte (30) · Urgente/quebrado (45) |
-| 💰 **Renda familiar** | 0–35 | ≤0.5 SM (35) · ≤1 SM (28) · ≤2 SM (15) · >2 SM (5) |
-| 👤 **Idade (11–17)** | 0–20 | 17a (20) · 16a (17) · ... · 11a (3) — prioriza próximos da maioridade |
-
-**Decisão de design:** algoritmo determinístico em vez de ML. Em saúde infantil + vulnerabilidade social, **explicabilidade vale mais que sofisticação** — a equipe da TdB consegue auditar e ajustar pesos sem precisar de cientista de dados. Tabelas exportadas como constantes em `src/utils/scoreUtils.ts`, cobertas por testes unitários.
-
----
-
-## 🎫 Sistema de Tickets
-
-Cada caso recebe um identificador único `TDB-YYYY-NNNNN` que serve como **fio condutor visual** entre todos os papéis do sistema.
-
-### Estados possíveis
-
-```
-NAO_INICIADO ──→ EM_TRIAGEM ──→ AGUARDANDO_DENTISTA ──→ EM_ATENDIMENTO ──→ FINALIZADO
-      │              │                    │                       │
-      └──────────────┴────────────────────┴───────────────────────┴──→ CANCELADO
-```
-
-### Componentes visuais reutilizáveis
-
-Em `src/components/ticket/`:
-
-| Componente | Função |
+| Categoria | Tecnologia |
 |---|---|
-| `<TicketBadge>` | Badge colorido com ícone + label do status |
-| `<TicketNumero>` | Pill com código TDB-YYYY-NNNNN (copiável) |
-| `<SLABadge>` | Tempo aberto com semáforo verde/amarelo/vermelho |
-| `<TicketTimeline>` | Linha do tempo vertical com eventos animados (Framer Motion) |
-| `<FiltroStatus>` | Filtro pill horizontal com contadores por status |
-
-### Página pública (LGPD-safe)
-
-`/ticket/TDB-2026-00042` — acessível **sem login**, mostra:
-- ✅ Número do ticket + status atual
-- ✅ Timeline de eventos
-- ✅ Primeiro nome do dentista (se atribuído)
-- ❌ NUNCA mostra nome do paciente, CPF, endereço ou descrição do problema
+| **Framework** | React 19 + Vite 8 |
+| **Linguagem** | TypeScript 5.9 (tipagem estática rigorosa) |
+| **Estilização** | Tailwind CSS 4 (sem CSS externo) |
+| **Roteamento** | React Router DOM 7 (SPA com rotas estáticas e dinâmicas) |
+| **Ícones** | Lucide React |
+| **Mapas** | Leaflet + React-Leaflet + Leaflet.Heat |
+| **Animações** | Framer Motion 12 |
+| **Geração de PDF/CSV** | jsPDF + jsPDF-AutoTable |
+| **Integração com API** | Fetch API nativa (sem Axios) |
+| **Testes** | Vitest + Testing Library |
+| **Linting** | ESLint 9 + typescript-eslint |
+| **Deploy Front-End** | Vercel |
+| **Deploy Back-End** | Azure App Service (container Docker) |
+| **Banco de Dados** | Oracle (FIAP) |
+| **Versionamento** | Git + GitHub |
 
 ---
 
-## 📂 Estrutura do Projeto
+## ✨ Funcionalidades Implementadas
 
-```
-Challenge-Sprint/
-├── public/                          # Assets estáticos
-├── index.html                       # Inclui script inline para dark mode sem flash
-├── package.json
-├── vite.config.ts                   # Proxy /api → Azure em dev
-├── vercel.json                      # Rewrites SPA
+- 🔐 **Autenticação por perfil** — admin, médico e paciente, com `ProtectedRoute` validando sessão e role antes de renderizar cada dashboard.
+- 📋 **Cadastro de pacientes** com seleção de especialidade necessária, descrição de sintomas e nível de urgência.
+- 🏥 **Triagem inteligente** — algoritmo que prioriza pacientes por urgência clínica e especialidade necessária.
+- 🗺️ **Mapa interativo (Leaflet)** com heatmap de pacientes por região e cobertura satelital.
+- 📊 **Dashboard Admin** com métricas operacionais, exportação de relatórios em PDF e CSV.
+- 👨‍⚕️ **Dashboard Médico** — fila priorizada, aceitação de pacientes, teleconsultas e prontuário.
+- 👤 **Dashboard Paciente** — acompanhamento de status, histórico de consultas e prontuário individual.
+- 📁 **Prontuário dinâmico** via rota com parâmetro (`/prontuario/:nome`).
+- 🌙 **Dark mode** com hook `useDarkMode` — tema escuro por padrão.
+- 📱 **Layout 100% responsivo** — Mobile (até 480px), Tablet (768px) e Desktop (992px+).
+- 🛰️ **Página de Regiões** — mapa de cobertura satelital e regiões remotas atendidas.
+- 📅 **Página de Consultas** — agendamento e gestão de teleconsultas.
+
+---
+
+## 📁 Estrutura de Pastas do Projeto
+
+```text
+global-solution-2026/
+├── public/                         # Assets estáticos
 ├── src/
-│   ├── App.tsx
-│   ├── main.tsx                     # Entry point
-│   ├── config.ts                    # API_URL com fallback prod
-│   ├── stl.css                      # Tailwind v4 + variantes dark
-│   ├── Routes/
-│   │   └── index.tsx                # Rotas + ProtectedRoute por role
-│   ├── contexts/
-│   │   ├── AuthContext.tsx          # JWT + sessionStorage
-│   │   └── ThemeContext.tsx         # Dark mode persistente
-│   ├── hooks/
-│   │   ├── useDarkMode.ts
-│   │   └── useToast.tsx
-│   ├── components/
-│   │   ├── Header.tsx               # Com DemoBadge condicional
-│   │   ├── Footer.tsx
-│   │   ├── ProtectedRoute.tsx       # Guard por role
-│   │   ├── MapaRota.tsx             # Leaflet + OSRM
-│   │   ├── StatusAgendamento.tsx
+│   ├── components/                 # Componentes reutilizáveis
+│   │   ├── ui/                     # Design system (Button, Card, Input, Badge, etc.)
+│   │   ├── Header.tsx              # Cabeçalho com navegação e dark mode
+│   │   ├── Footer.tsx              # Rodapé
+│   │   ├── ProtectedRoute.tsx      # Guard de rotas autenticadas
 │   │   ├── ModalAvaliarPaciente.tsx
-│   │   ├── ModalFichaAtiva.tsx      # Com TicketTimeline integrada
-│   │   ├── ticket/
-│   │   │   ├── TicketBadge.tsx
-│   │   │   ├── TicketNumero.tsx
-│   │   │   ├── SLABadge.tsx
-│   │   │   ├── TicketTimeline.tsx
-│   │   │   └── FiltroStatus.tsx
-│   │   ├── layout/
-│   │   │   └── DashboardLayout.tsx
-│   │   └── ui/
-│   │       ├── DemoBadge.tsx        # Aparece só em DEV
-│   │       └── index.tsx            # Skeleton, EmptyState, Badge
-│   ├── pages/
-│   │   ├── Home.tsx
-│   │   ├── Login.tsx
-│   │   ├── Cadastro.tsx
-│   │   ├── Sobre.tsx, FAQ.tsx, QuemSomos.tsx, Reconhecimentos.tsx
-│   │   ├── ApoloniasDoBem.tsx       # Programa para mulheres em violência
-│   │   ├── Doador.tsx               # PIX + Nota Fiscal Paulista
-│   │   ├── Contato.tsx, FormularioContato.tsx
-│   │   ├── Formulario.tsx           # Triagem detalhada
-│   │   ├── Prontuario.tsx
-│   │   ├── CalculadoraScore.tsx
-│   │   ├── TicketPublico.tsx        # /ticket/:codigo (sem auth)
-│   │   ├── MetricasOperacionais.tsx # Aba do admin
-│   │   ├── AdminDashboard.tsx
-│   │   ├── DentistaDashboard.tsx
-│   │   └── PacienteDashboard.tsx
-│   ├── data/
-│   │   └── latamCoordinates.ts      # Gerado por scripts/generateCoordinates.mjs
-│   ├── img/                         # Hero, fotos da equipe
+│   │   ├── ModalFichaAtiva.tsx
+│   │   └── StatusAgendamento.tsx
+│   ├── pages/                      # Views (uma por rota)
+│   │   ├── Home.tsx                # Página inicial
+│   │   ├── Sobre.tsx               # Sobre o projeto
+│   │   ├── Integrantes.tsx         # Página da equipe
+│   │   ├── FAQ.tsx                 # Perguntas frequentes
+│   │   ├── Contato.tsx             # Formulário de contato
+│   │   ├── Consultas.tsx           # Agendamento de teleconsultas
+│   │   ├── Regioes.tsx             # Mapa de regiões atendidas
+│   │   ├── Login.tsx               # Autenticação
+│   │   ├── Cadastro.tsx            # Registro de usuário
+│   │   ├── Prontuario.tsx          # Rota dinâmica /prontuario/:nome
+│   │   ├── AdminDashboard.tsx      # Painel administrativo
+│   │   ├── MedicoDashboard.tsx     # Painel do médico
+│   │   └── PacienteDashboard.tsx   # Painel do paciente
+│   ├── Routes/
+│   │   └── index.tsx               # Configuração central de rotas (BrowserRouter)
+│   ├── hooks/
+│   │   ├── useCep.ts               # Hook de integração com ViaCEP
+│   │   └── useDarkMode.ts          # Toggle de tema
 │   ├── lib/
-│   │   ├── api.ts                   # Cliente HTTP (novos endpoints)
-│   │   └── cn.ts
-│   ├── utils/
-│   │   ├── api.ts                   # apiFetch (injeta JWT)
-│   │   ├── ticketUtils.ts           # gerarTicket, mascaraCPF (LGPD), canalConfig
-│   │   ├── ticketStatusConfig.ts    # Cor, ícone, label por status
-│   │   ├── sla.ts                   # Cálculo de SLA
-│   │   ├── scoreUtils.ts            # Algoritmo Score TdB
-│   │   ├── relatorioUtils.ts        # Geração de HTML imprimível
-│   │   └── adminExportUtils.ts      # PDF/CSV
-│   └── test/                        # Vitest (43 testes)
-│       ├── scoreUtils.test.ts
-│       ├── sla.test.ts
-│       ├── login.test.tsx
-│       └── routes.test.ts
-└── scripts/
-    └── generateCoordinates.mjs      # Nominatim batch
+│   │   └── api.ts                  # Tipos e helpers de integração com a API
+│   ├── utils/                      # Utilitários (export PDF/CSV, relatórios)
+│   ├── data/                       # Dados estáticos (cidades, coordenadas)
+│   ├── img/                        # Imagens da equipe e do sistema
+│   ├── test/                       # Testes unitários (Vitest)
+│   ├── config.ts                   # URL base da API (lê VITE_API_URL)
+│   ├── App.tsx                     # Componente raiz
+│   ├── main.tsx                    # Ponto de entrada do React
+│   └── stl.css                     # Diretivas Tailwind
+├── eslint.config.js
+├── index.html
+├── package.json
+├── tsconfig.json
+├── vercel.json                     # Rewrites SPA para Vercel
+├── vite.config.ts
+└── vitest.config.ts
 ```
 
 ---
 
-## ☁ Deploy
+## 🔌 Integração com a API (Back-End Java/Quarkus)
 
-**Produção:** Vercel.
+A aplicação consome a API REST desenvolvida na disciplina **Domain Driven Design Using Java**, publicada no Azure App Service via container Docker. A URL base é resolvida em tempo de build pelo Vite via variável `VITE_API_URL`.
 
-- **URL:** `https://challenge-sprint.vercel.app` (ou domínio configurado)
-- **CI/CD:** GitHub Actions
-- **Auto-deploy:** push na `master` dispara build + deploy
+### Endpoints consumidos (CRUD completo)
 
-`vercel.json` faz rewrite de todas as rotas para `index.html` (SPA navigation).
-
-A variável `VITE_API_URL` precisa ser configurada no painel da Vercel apontando para a URL do backend em produção.
-
----
-
-## 🌗 Dark Mode sem flash
-
-O `index.html` inclui um script inline que roda **antes** do React montar, evitando o flash de tema errado:
-
-```html
-<script>
-  (function() {
-    const t = localStorage.getItem('theme');
-    if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-    }
-  })();
-</script>
-```
-
-Importante para a apresentação: F5 ao vivo não causa "piscada" de tema.
-
----
-
-## 👥 Equipe
-
-Desenvolvido pela turma **1TDSPB — FIAP** como Challenge Sprint 2026.
-
-| Nome | RM | GitHub |
+| Verbo HTTP | Endpoint | Função |
 |---|---|---|
-| Gabriel Correa Souza | 567903 | [@gcorrea4](https://github.com/gcorrea4) |
-| Kayque Duarte | 567980 | [@Kayque2012](https://github.com/Kayque2012) |
-| Eric Maciel | 567398 | [@Eric-devops-tech](https://github.com/Eric-devops-tech) |
+| `POST` | `/login` | Autenticação de usuário |
+| `POST` | `/pacientes` | Cadastro de paciente |
+| `POST` | `/ofertas` | Aceitação de paciente pelo médico |
+| `POST` | `/pacientes/redefinir-senha` | Redefinição de senha |
+| `GET` | `/pacientes` | Lista pacientes por filtros |
+| `GET` | `/medicos` | Lista médicos disponíveis |
+| `GET` | `/pacientes/atendidos?idMedico=...` | Lista pacientes atendidos pelo médico |
+| `GET` | `/ofertas/medico/:id` | Histórico de ofertas do médico |
+| `PUT` | `/pacientes/:id` | Atualização de dados do paciente |
+| `PUT` | `/pacientes/:id/status` | Atualização de status do ticket |
+| `PATCH` | `/ofertas/:id/concluir` | Conclusão de teleconsulta |
+| `GET` | `/admin/metricas` | Métricas operacionais (admin) |
+
+---
+
+## 🖼️ Imagens e Screenshots
+
+<!-- Adicionar prints após tirar as fotos -->
+
+**Desktop:**
+
+_em breve_
+
+**Mobile:**
+
+_em breve_
+
+---
+
+## 👥 Autores e Créditos — Equipe 1TDSPB
+
+| Foto | Nome | RM | Turma | GitHub | LinkedIn |
+|:---:|---|:---:|:---:|:---:|:---:|
+| <img src="src/img/foto-correa.jpg" width="60" style="border-radius:50%"/> | **Gabriel Correa** | 567903 | 1TDSPB | [@gcorrea4](https://github.com/gcorrea4) | [LinkedIn](https://www.linkedin.com/in/gabriel-correa-souza-763135271/) |
+| <img src="src/img/foto-kay.jpg" width="60" style="border-radius:50%"/> | **Kayque Duarte** | 567980 | 1TDSPB | [@Kayque2012](https://github.com/Kayque2012) | [LinkedIn](https://www.linkedin.com/in/kayque-duarte-b24313361/) |
+| <img src="src/img/foto-eric.jpg" width="60" style="border-radius:50%"/> | **Eric Maciel** | 567398 | 1TDSPB | [@Eric-devops-tech](https://github.com/Eric-devops-tech) | [LinkedIn](https://www.linkedin.com/in/eric-maciel-144058389/) |
+
+---
+
+## 📬 Contato
+
+Para dúvidas, sugestões ou colaborações, entre em contato com a equipe através do LinkedIn ou GitHub dos integrantes listados acima, ou pelo formulário de contato disponível na própria aplicação em `/contato`.
 
 ---
 
 ## 📄 Licença
 
-Projeto acadêmico desenvolvido em parceria com a **ONG Turma do Bem**.
-Uso restrito a fins educacionais e à demonstração do desafio.
-
----
-
-<p align="center">
-  Feito com 💙 e propósito · <strong>Devolver o sorriso é devolver a empregabilidade.</strong>
-</p>
+Projeto acadêmico desenvolvido para a **Global Solution 2026/1 — FIAP × 1TDS Agosto**. Uso educacional.

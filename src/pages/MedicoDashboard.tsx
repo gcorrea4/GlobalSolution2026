@@ -15,7 +15,7 @@ import {
   LayoutDashboard, Users, Calendar, LogOut,
   Search, MessageSquare, Send,
   MapPin, Phone, AlertCircle, Star, Filter, Clock, CheckCircle2, X,
-  FileText, SearchX, CalendarDays,
+  FileText, SearchX, CalendarDays, Menu, Satellite, Video,
 } from 'lucide-react';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
@@ -119,12 +119,27 @@ function calcularScorePaciente(p: Paciente): number {
   return calcularScore(mapDorParaEnum(p.tipo_dor || ''), p.renda ?? 0, typeof p.idade === 'number' ? p.idade : 0);
 }
 
+function UrgenciaBadge({ score }: { score: number }) {
+  if (score >= 70) return (
+    <span className="inline-flex items-center text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-red-500/10 text-red-400 border border-red-500/20">ALTA</span>
+  );
+  if (score >= 40) return (
+    <span className="inline-flex items-center text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-400 border border-amber-500/20">MÉDIA</span>
+  );
+  return (
+    <span className="inline-flex items-center text-[10px] font-bold uppercase px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">BAIXA</span>
+  );
+}
+
 // ─── Componente principal ─────────────────────────────────────────────────────
+
+type TelaMedico = 'painel' | 'pacientes' | 'agenda';
 
 export function MedicoDashboard() {
   const navigate = useNavigate();
 
-  const [telaAtiva, setTelaAtiva] = useState<'painel' | 'pacientes' | 'agenda'>('painel');
+  const [telaAtiva, setTelaAtiva] = useState<TelaMedico>('painel');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [pesquisa, setPesquisa] = useState('');
   const [pergunta, setPergunta] = useState('');
   const [respostaIA, setRespostaIA] = useState('');
@@ -278,7 +293,7 @@ export function MedicoDashboard() {
   const handleEnviarOferta = async () => {
     if (!fichaAtiva || slotsLivres.length === 0) return;
     try {
-      const res = await apiFetch(`/ofertas`, {
+      const res = await apiFetch('/ofertas', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -292,7 +307,7 @@ export function MedicoDashboard() {
         dentistaNome: usuarioLogado, dentistaCidade: cidadeAtiva,
         procedimento: procedimentoOferta, slots: slotsLivres,
         status: 'pendente', criadaEm: new Date().toISOString(),
-      }}));
+      } }));
       setSlotsPropostos([]); setNovaData(''); setNovaHora('');
       showMensagem(`Horários de teleconsulta enviados para ${fichaAtiva.nome}!`);
     } catch {
@@ -300,13 +315,9 @@ export function MedicoDashboard() {
     }
   };
 
-  const atualizarStatusPaciente = async (
-    paciente: Paciente,
-    acao: 'adotado' | 'disponivel'
-  ) => {
+  const atualizarStatusPaciente = async (paciente: Paciente, acao: 'adotado' | 'disponivel') => {
     const idNum = Number(medicoId);
     if (acao === 'adotado' && !idNum) { alert('Erro: ID do médico não encontrado. Por favor, faça login novamente.'); return; }
-
     try {
       const res = await apiFetch(`/pacientes/${paciente.id}`, {
         method: 'PUT',
@@ -325,7 +336,6 @@ export function MedicoDashboard() {
         const errBody = await res.json().catch(() => ({}));
         throw new Error((errBody as { erro?: string; causa?: string }).causa || (errBody as { erro?: string }).erro || `Erro HTTP ${res.status}`);
       }
-
       if (acao === 'adotado') {
         setPacientes(prev => prev.filter(p => p.id !== paciente.id));
         setMeusPacientes(prev => [...prev, { ...paciente }]);
@@ -351,11 +361,7 @@ export function MedicoDashboard() {
     try {
       const res = await apiFetch(`/ofertas/${ofertaId}`, { method: 'DELETE' });
       if (!res.ok) throw new Error();
-      setOfertasMapa(prev => {
-        const novo = { ...prev };
-        delete novo[pacienteNome];
-        return novo;
-      });
+      setOfertasMapa(prev => { const novo = { ...prev }; delete novo[pacienteNome]; return novo; });
       showMensagem(`Proposta enviada a ${pacienteNome} cancelada.`);
     } catch {
       showMensagem('Erro ao cancelar a proposta. Tente novamente.');
@@ -366,7 +372,7 @@ export function MedicoDashboard() {
     if (!pergunta.trim()) return;
     setCarregandoIA(true);
     try {
-      const res = await apiFetch(`/IA/consultar`, {
+      const res = await apiFetch('/IA/consultar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ texto: pergunta, fila_json: JSON.stringify(pacientesFiltrados) }),
@@ -403,396 +409,423 @@ export function MedicoDashboard() {
   // ─── Nav ─────────────────────────────────────────────────────────────────────
 
   const navItems = [
-    { id: 'painel',    icon: <LayoutDashboard size={20} />, label: 'Fila de Triagem',   badge: 0 },
-    { id: 'pacientes', icon: <Users size={20} />,           label: 'Meus Pacientes',     badge: meusPacientes.length },
-    { id: 'agenda',    icon: <Calendar size={20} />,        label: 'Teleconsultas',      badge: agendamentos.length },
-  ] as const;
+    { id: 'painel' as const,    icon: <LayoutDashboard size={18} />, label: 'Fila de Pacientes',  badge: pacientes.length },
+    { id: 'pacientes' as const, icon: <Users size={18} />,           label: 'Meus Pacientes',     badge: meusPacientes.length },
+    { id: 'agenda' as const,    icon: <Calendar size={18} />,        label: 'Teleconsultas',      badge: agendamentos.length },
+  ];
 
   // ─── Render ───────────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 font-sans pb-16 md:pb-0 transition-colors duration-300">
+    <div className="flex h-screen bg-slate-950 font-sans overflow-hidden">
       <title>Meu Painel · OrbitalCare</title>
 
-      {/* ── Top navigation bar ── */}
-      <header className="sticky top-0 z-40 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 h-16 flex items-center gap-4">
-
-          {/* User info */}
-          <div className="flex items-center gap-3 flex-shrink-0">
-            <div className="w-9 h-9 bg-gradient-to-br from-sky-400 to-sky-600 rounded-xl text-white flex items-center justify-center font-black text-base shadow-sm">
-              {usuarioLogado.charAt(0).toUpperCase()}
-            </div>
-            <div className="hidden sm:block">
-              <p className="text-sm font-bold text-gray-900 dark:text-white leading-none truncate max-w-[140px]">{usuarioLogado}</p>
-              <p className="text-xs text-sky-500 font-semibold mt-0.5">
-                {userRole === 'dev' ? 'Desenvolvedor' : 'Médico OrbitalCare'}
-              </p>
-            </div>
-            <DemoBadge />
-          </div>
-
-          {/* Tab navigation — desktop */}
-          <nav className="hidden md:flex items-center gap-1 bg-slate-100 dark:bg-slate-700 rounded-xl p-1 mx-auto">
-            {navItems.map(item => (
-              <button
-                key={item.id}
-                onClick={() => setTelaAtiva(item.id)}
-                className={`relative flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-bold transition-all duration-200 ${
-                  telaAtiva === item.id
-                    ? 'bg-white dark:bg-slate-600 text-gray-900 dark:text-white shadow-sm'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-white/60 dark:hover:bg-slate-600/60'
-                }`}
-              >
-                {item.icon}
-                {item.label}
-                {item.badge > 0 && (
-                  <span className="bg-sky-500 text-white text-[10px] font-black w-[18px] h-[18px] rounded-full flex items-center justify-center leading-none">
-                    {item.badge}
-                  </span>
-                )}
-              </button>
-            ))}
-          </nav>
-
-          {/* Logout */}
-          <button
-            onClick={handleLogout}
-            className="ml-auto flex items-center gap-2 text-slate-400 hover:text-red-500 text-sm font-bold transition-colors px-3 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30"
-            title="Sair"
-          >
-            <LogOut size={16} />
-            <span className="hidden sm:inline">Sair</span>
-          </button>
-        </div>
-      </header>
-
-      {/* Toast */}
-      {mensagem && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-green-50 text-green-700 border border-green-200 px-6 py-3 rounded-xl shadow-lg font-bold animate-fade-in flex items-center gap-2 whitespace-nowrap">
-          <CheckCircle2 size={20} /> {mensagem}
-        </div>
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      {/* Conteúdo principal */}
-      <main className="max-w-7xl mx-auto px-4 md:px-8 py-8 w-full">
-
-        {/* ── Fila de Triagem ── */}
-        {telaAtiva === 'painel' && (
-          <div className="animate-fade-in">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Fila de Triagem Inteligente</h2>
-                {userRole === 'dev' ? (
-                  <div className="flex items-center gap-2 mt-2">
-                    <Filter size={14} className="text-gray-400 dark:text-slate-500" />
-                    <span className="text-xs font-bold text-gray-500 dark:text-slate-400 uppercase">Simular Região:</span>
-                    <select value={cidadeAtiva} onChange={(e) => setCidadeAtiva(e.target.value)}
-                      className="bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-sm rounded-lg px-2 py-1 text-sky-500 font-bold outline-none cursor-pointer hover:border-sky-500 transition-colors dark:text-sky-400">
-                      <option value="São Paulo">São Paulo (BR)</option>
-                      <option value="Rio de Janeiro">Rio de Janeiro (BR)</option>
-                      <option value="Bogotá">Bogotá (CO)</option>
-                      <option value="Buenos Aires">Buenos Aires (AR)</option>
-                      <option value="Cidade do México">Cidade do México (MX)</option>
-                      <option value="Santiago">Santiago (CL)</option>
-                    </select>
-                  </div>
-                ) : (
-                  <p className="text-gray-500 dark:text-slate-400 text-sm mt-1">Região de Atuação: <span className="font-bold text-gray-700 dark:text-slate-200">{cidadeAtiva}</span></p>
-                )}
-              </div>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-slate-500" size={18} />
-                <input type="text" placeholder="Buscar paciente..." value={pesquisa} onChange={(e) => setPesquisa(e.target.value)}
-                  className="pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm text-gray-800 dark:text-slate-200 placeholder-gray-400 dark:placeholder-slate-400 w-full md:w-64 focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all" />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              {/* Lista de pacientes */}
-              <div className="lg:col-span-8 space-y-4">
-                <span className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider px-2">Ordenado por IA (Score de Prioridade)</span>
-
-                {carregandoPacientes ? (
-                  <>
-                    <Skeleton variant="card" />
-                    <Skeleton variant="card" />
-                    <Skeleton variant="card" />
-                  </>
-                ) : pacientesFiltrados.length === 0 ? (
-                  <EmptyState
-                    icon={SearchX}
-                    title="Nenhum paciente na fila"
-                    description="Quando pacientes desta região solicitarem teleconsulta, aparecerão aqui priorizados pelo Score de Prioridade."
-                  />
-                ) : (
-                  pacientesFiltrados.map((p, i) => (
-                    <div key={i} className="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-md hover:border-sky-200 dark:hover:border-sky-700/60 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative overflow-hidden">
-                      <div className={`absolute left-0 top-0 bottom-0 w-1 ${p.score_match >= 70 ? 'bg-red-400' : p.score_match >= 40 ? 'bg-sky-400' : 'bg-green-400'}`} />
-                      <div className="flex items-center gap-4 pl-2">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm ${p.score_match >= 70 ? 'bg-red-50 dark:bg-red-950/30 text-red-600' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'}`}>
-                          {p.nome.charAt(0)}
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h4 className="font-bold text-gray-800 dark:text-white leading-tight cursor-pointer hover:text-sky-500 hover:underline" onClick={() => navigate(`/prontuario/${p.nome}`)}>
-                              {p.nome}
-                            </h4>
-                            <span className="bg-slate-50 dark:bg-slate-700 text-gray-500 dark:text-slate-400 text-xs px-2 py-0.5 rounded-md font-semibold border border-slate-100 dark:border-slate-600">{p.idade} anos</span>
-                          </div>
-                          <div className="flex items-center gap-3 mt-1.5 flex-wrap">
-                            <p className="text-xs text-gray-500 dark:text-slate-400 flex items-center gap-1 font-medium"><MapPin size={12} /> {p.cidade}, {p.pais}</p>
-                            <p className={`text-xs font-bold flex items-center gap-1 uppercase ${(p.tipo_dor || '').includes('quebrado') || p.tipo_dor === 'forte' || p.tipo_dor === 'alta' ? 'text-red-500' : 'text-gray-500 dark:text-slate-400'}`}>
-                              <AlertCircle size={12} /> {p.tipo_dor}
-                            </p>
-                            {p.criadoEm && <SLABadge criadoEm={p.criadoEm} />}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className="text-right">
-                          <p className="text-xs text-gray-400 dark:text-slate-500 font-bold uppercase mb-0.5">Prioridade</p>
-                          <div className="flex items-center justify-end gap-1">
-                            <span className={`text-sm font-bold ${p.score_match >= 70 ? 'text-gray-800 dark:text-white' : 'text-gray-500 dark:text-slate-400'}`}>{p.score_match}%</span>
-                            {p.score_match >= 70 && <Star size={12} className="text-amber-500 fill-amber-500" />}
-                          </div>
-                        </div>
-                        <button onClick={() => setPacienteSelecionado(p)} className="bg-white dark:bg-transparent text-sky-500 border border-sky-500 px-4 py-2 rounded-xl font-bold text-xs hover:bg-sky-500 hover:text-white transition-colors">
-                          Avaliar
-                        </button>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-
-              {/* Chat IA — visível só no desktop */}
-              <div className="hidden lg:block lg:col-span-4">
-                <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col h-[550px] sticky top-4 overflow-hidden">
-                  <div className="bg-slate-50 dark:bg-slate-700/40 p-4 border-b border-slate-100 dark:border-slate-700 flex items-center gap-3">
-                    <div className="bg-white dark:bg-slate-700 p-2 rounded-lg shadow-sm border border-slate-100 dark:border-slate-600 text-sky-500"><MessageSquare size={20} /></div>
-                    <div>
-                      <h3 className="font-bold text-gray-800 dark:text-white text-sm">Assistente OrbitalCare</h3>
-                      <p className="text-xs text-gray-400 dark:text-slate-500 font-semibold">Gemini 2.5</p>
-                    </div>
-                  </div>
-                  <div className="flex-1 p-4 overflow-y-auto space-y-4 bg-white dark:bg-slate-800">
-                    <div className="self-start bg-slate-50 dark:bg-slate-700/40 p-3.5 rounded-2xl rounded-tl-sm text-sm text-gray-600 dark:text-slate-300 border border-slate-100 dark:border-slate-700">
-                      Doutor(a), os pacientes estão priorizados por urgência na região de <strong>{cidadeAtiva}</strong>. Posso ajudar a analisar algum caso?
-                    </div>
-                    {respostaIA && (
-                      <div className="self-start bg-sky-50/50 dark:bg-sky-950/20 p-3.5 rounded-2xl rounded-tl-sm text-sm text-gray-700 dark:text-slate-300 border border-sky-100 dark:border-sky-900/40 whitespace-pre-wrap">{respostaIA}</div>
-                    )}
-                    {carregandoIA && <div className="text-xs text-gray-400 dark:text-slate-500 font-medium animate-pulse pl-2">Analisando...</div>}
-                  </div>
-                  <div className="p-3 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700 flex gap-2">
-                    <input type="text" placeholder="Ex: Qual o caso mais urgente?" value={pergunta}
-                      onChange={(e) => setPergunta(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && enviarPerguntaIA()}
-                      className="flex-1 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-xl px-3 py-2.5 text-sm text-gray-800 dark:text-slate-200 placeholder-gray-400 dark:placeholder-slate-400 focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none" />
-                    <button onClick={enviarPerguntaIA} className="bg-sky-500 text-white p-2.5 rounded-xl hover:bg-sky-600 transition-colors"><Send size={18} /></button>
-                  </div>
-                </div>
-              </div>
-            </div>
+      {/* ── Sidebar ── */}
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 border-r border-slate-800 flex flex-col transition-transform duration-300 md:static md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="h-14 flex items-center gap-3 px-5 border-b border-slate-800 flex-shrink-0">
+          <div className="w-7 h-7 bg-sky-500 rounded-lg flex items-center justify-center flex-shrink-0">
+            <Satellite size={14} className="text-white" />
           </div>
-        )}
+          <span className="font-black text-white text-sm tracking-wide">OrbitalCare</span>
+          <button className="ml-auto text-slate-500 hover:text-white md:hidden transition-colors" onClick={() => setSidebarOpen(false)}>
+            <X size={18} />
+          </button>
+        </div>
 
-        {/* ── Meus Pacientes ── */}
-        {telaAtiva === 'pacientes' && (
-          <div className="animate-fade-in max-w-4xl mx-auto">
-            <div className="mb-6 flex items-center gap-3">
-              <div className="bg-sky-50 dark:bg-sky-950/40 p-3 rounded-xl text-sky-500"><Users size={24} /></div>
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Meus Pacientes Ativos</h2>
-                <p className="text-gray-500 dark:text-slate-400 text-sm">Pacientes em teleconsulta sob seus cuidados na plataforma.</p>
-              </div>
-            </div>
-
-            {carregandoMeusPacientes ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Skeleton variant="card" />
-                <Skeleton variant="card" />
-              </div>
-            ) : meusPacientes.length === 0 ? (
-              <EmptyState
-                icon={Users}
-                title="Ainda sem pacientes ativos"
-                description="Acesse a Fila de Triagem, avalie um paciente e aceite o atendimento."
-                action={{ label: 'Ver Fila de Triagem', onClick: () => setTelaAtiva('painel') }}
-              />
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {meusPacientes.map((p, idx) => (
-                  <div key={idx} className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm flex flex-col justify-between">
-                    <div>
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-sky-500 text-white rounded-full flex items-center justify-center font-bold text-sm">{p.nome.charAt(0)}</div>
-                          <div>
-                            <h4 className="font-bold text-gray-800 dark:text-white leading-tight">{p.nome}</h4>
-                            <span className="text-xs text-gray-500 dark:text-slate-400 font-medium">{p.idade} anos</span>
-                          </div>
-                        </div>
-                        <Badge variant="success">Ativo</Badge>
-                        {p.status && <TicketBadge status={p.status} size="sm" />}
-                      </div>
-                      <div className="space-y-2 mb-3">
-                        <p className="text-sm text-gray-600 dark:text-slate-300 flex items-center gap-2"><Phone size={14} className="text-gray-400 dark:text-slate-500" /> {p.telefone || '(11) 90000-0000'}</p>
-                        <p className="text-sm text-gray-600 dark:text-slate-300 flex items-center gap-2"><MapPin size={14} className="text-gray-400 dark:text-slate-500" /> {p.cidade}, {p.pais}</p>
-                      </div>
-                      <StatusAgendamento oferta={ofertasMapa[p.nome]} temAgendamento={agendamentos.some(a => a.paciente?.nome === p.nome)} />
-                    </div>
-                    <div className="flex gap-2 mt-4">
-                      <button onClick={() => abrirFicha(p)} className="flex-1 bg-slate-50 dark:bg-slate-700 text-sky-500 border border-sky-200 dark:border-sky-800/60 py-2.5 rounded-xl font-bold text-sm hover:bg-sky-50 dark:hover:bg-sky-950/30 hover:border-sky-500 flex items-center justify-center gap-2 transition-all">
-                        <Calendar size={16} /> Prontuário
-                      </button>
-                      <button onClick={() => imprimirRelatorio(p, usuarioLogado)} className="bg-slate-50 dark:bg-slate-700 text-gray-500 dark:text-slate-400 border border-slate-200 dark:border-slate-600 px-3 py-2.5 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-950/30 hover:text-blue-600 hover:border-blue-200 transition-all flex items-center justify-center" title="Gerar Relatório">
-                        <FileText size={18} />
-                      </button>
-                      <button onClick={() => setConfirmarCancelamento(p)} className="bg-red-50 dark:bg-red-950/30 text-red-500 border border-red-200 dark:border-red-900/50 px-3 py-2.5 rounded-xl hover:bg-red-100 dark:hover:bg-red-950/50 hover:text-red-600 transition-all flex items-center justify-center" title="Encerrar atendimento">
-                        <X size={18} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* ── Teleconsultas ── */}
-        {telaAtiva === 'agenda' && (
-          <div className="animate-fade-in max-w-4xl mx-auto">
-            <div className="mb-6 flex items-center gap-3">
-              <div className="bg-sky-50 dark:bg-sky-950/40 p-3 rounded-xl text-sky-500"><Calendar size={24} /></div>
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Agenda de Teleconsultas</h2>
-                <p className="text-gray-500 dark:text-slate-400 text-sm">Próximas teleconsultas agendadas na plataforma OrbitalCare.</p>
-              </div>
-            </div>
-
-            {agendamentos.length === 0 ? (
-              <EmptyState
-                icon={CalendarDays}
-                title="Sem teleconsultas agendadas"
-                description="Ainda não há teleconsultas agendadas. Vá a Meus Pacientes para propor um horário."
-                action={{
-                  label: 'Ir para Meus Pacientes',
-                  onClick: () => {
-                    if (meusPacientes.length === 0) { alert('Aceite um paciente na Triagem primeiro!'); setTelaAtiva('painel'); }
-                    else setTelaAtiva('pacientes');
-                  },
-                }}
-              />
-            ) : (
-              <div className="bg-white dark:bg-slate-800 rounded-3xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
-                <div className="p-6 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-700/30 flex justify-between items-center">
-                  <h3 className="font-bold text-gray-800 dark:text-white">Próximas Teleconsultas</h3>
-                  <button onClick={() => setTelaAtiva('pacientes')} className="text-sky-500 font-bold text-sm hover:underline">+ Nova Teleconsulta</button>
-                </div>
-                <div className="divide-y divide-slate-100 dark:divide-slate-700">
-                  {agendamentos.sort((a, b) => a.data.localeCompare(b.data)).map((ag) => {
-                    const { diaSemana, diaMes } = formatarDataAgenda(ag.data);
-                    return (
-                      <div key={ag.id} className="p-6 flex items-start gap-6 hover:bg-slate-50 dark:hover:bg-slate-700/40 transition-colors animate-fade-in">
-                        <div className="text-center min-w-16">
-                          <p className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase">{diaSemana}</p>
-                          <p className="text-2xl font-black text-sky-500">{diaMes}</p>
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-bold text-gray-800 dark:text-white text-lg">{ag.tipo}</h4>
-                          <p className="text-gray-500 dark:text-slate-400 text-sm font-mono text-xs">
-                            {gerarTicket(ag.paciente.id)} · {abreviarNome(ag.paciente.nome)}
-                          </p>
-                          <div className="flex items-center gap-4 mt-3">
-                            <span className="bg-sky-50 dark:bg-sky-950/30 text-sky-500 px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5"><Clock size={14} /> {ag.hora}</span>
-                            <span className="bg-slate-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300 px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5"><MapPin size={14} /> Via Satélite / Videochamada</span>
-                          </div>
-                          <button
-                            onClick={() => handleConcluirConsulta(ag.id)}
-                            className="mt-3 text-xs font-bold text-green-600 border border-green-200 bg-green-50 px-3 py-1.5 rounded-lg hover:bg-green-100 transition-colors flex items-center gap-1.5"
-                          >
-                            <CheckCircle2 size={13} /> Marcar como Concluída
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-      </main>
-
-      {/* ── Mobile bottom navigation ── */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 shadow-[0_-4px_12px_rgba(0,0,0,0.06)]">
-        <div className="flex">
+        <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
           {navItems.map(item => (
             <button
               key={item.id}
-              onClick={() => setTelaAtiva(item.id)}
-              className={`flex-1 flex flex-col items-center gap-1 py-3 px-1 transition-colors ${
-                telaAtiva === item.id ? 'text-sky-500' : 'text-slate-400'
+              onClick={() => { setTelaAtiva(item.id); setSidebarOpen(false); }}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors border ${
+                telaAtiva === item.id
+                  ? 'bg-sky-500/10 text-sky-400 border-sky-500/20'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800 border-transparent'
               }`}
             >
-              <span className="relative">
-                {item.icon}
-                {item.badge > 0 && (
-                  <span className="absolute -top-1.5 -right-2.5 w-4 h-4 bg-sky-500 text-white text-[9px] font-black rounded-full flex items-center justify-center leading-none">
-                    {item.badge > 9 ? '9+' : item.badge}
-                  </span>
-                )}
-              </span>
-              <span className="text-[10px] font-bold leading-none">{item.label.split(' ')[0]}</span>
+              <span className="flex-shrink-0">{item.icon}</span>
+              {item.label}
+              {item.badge > 0 && (
+                <span className="ml-auto bg-slate-800 text-slate-400 text-[10px] font-bold px-1.5 py-0.5 rounded-md">
+                  {item.badge > 99 ? '99+' : item.badge}
+                </span>
+              )}
             </button>
           ))}
+        </nav>
+
+        <div className="p-4 border-t border-slate-800 flex-shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-sky-500/20 text-sky-400 rounded-lg flex items-center justify-center font-bold text-sm flex-shrink-0">
+              {usuarioLogado.charAt(0).toUpperCase()}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-white text-xs font-semibold truncate">{usuarioLogado}</p>
+              <p className="text-slate-500 text-[11px]">{userRole === 'dev' ? 'Desenvolvedor' : 'Médico OrbitalCare'}</p>
+            </div>
+            <button onClick={handleLogout} className="text-slate-500 hover:text-red-400 p-1.5 rounded-lg hover:bg-red-500/10 transition-colors" title="Sair">
+              <LogOut size={15} />
+            </button>
+          </div>
         </div>
-      </nav>
+      </aside>
+
+      {/* ── Main area ── */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+        {/* Topbar */}
+        <header className="h-14 bg-slate-900 border-b border-slate-800 flex items-center gap-4 px-4 md:px-6 flex-shrink-0">
+          <button className="md:hidden text-slate-400 hover:text-white transition-colors" onClick={() => setSidebarOpen(true)}>
+            <Menu size={20} />
+          </button>
+          <h1 className="text-white font-semibold text-sm">
+            {navItems.find(n => n.id === telaAtiva)?.label ?? 'Dashboard'}
+          </h1>
+          <div className="ml-auto flex items-center gap-2">
+            <DemoBadge />
+          </div>
+        </header>
+
+        {/* Toast */}
+        {mensagem && (
+          <div className="absolute top-16 left-1/2 -translate-x-1/2 z-50 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-5 py-3 rounded-xl font-semibold text-sm flex items-center gap-2 whitespace-nowrap shadow-lg">
+            <CheckCircle2 size={16} /> {mensagem}
+          </div>
+        )}
+
+        {/* Content */}
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+
+          {/* ── Fila de Pacientes ── */}
+          {telaAtiva === 'painel' && (
+            <div className="animate-fade-in space-y-5">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-xl font-bold text-white">Fila de Triagem</h2>
+                  {userRole === 'dev' ? (
+                    <div className="flex items-center gap-2 mt-1">
+                      <Filter size={12} className="text-slate-500" />
+                      <span className="text-xs font-bold text-slate-500 uppercase">Simular Região:</span>
+                      <select value={cidadeAtiva} onChange={e => setCidadeAtiva(e.target.value)}
+                        className="bg-slate-800 border border-slate-700 text-xs rounded-lg px-2 py-1 text-sky-400 font-bold outline-none cursor-pointer hover:border-sky-500 transition-colors">
+                        <option value="São Paulo">São Paulo (BR)</option>
+                        <option value="Rio de Janeiro">Rio de Janeiro (BR)</option>
+                        <option value="Bogotá">Bogotá (CO)</option>
+                        <option value="Buenos Aires">Buenos Aires (AR)</option>
+                        <option value="Cidade do México">Cidade do México (MX)</option>
+                        <option value="Santiago">Santiago (CL)</option>
+                      </select>
+                    </div>
+                  ) : (
+                    <p className="text-slate-400 text-sm mt-0.5">Região: <span className="font-semibold text-white">{cidadeAtiva}</span> — ordenado por IA</p>
+                  )}
+                </div>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={14} />
+                  <input type="text" placeholder="Buscar paciente..." value={pesquisa}
+                    onChange={e => setPesquisa(e.target.value)}
+                    className="pl-9 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 w-full md:w-[220px] focus:ring-1 focus:ring-sky-500/40 focus:border-sky-500 outline-none" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                {/* Tabela de fila */}
+                <div className="lg:col-span-8">
+                  <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                    <div className="px-4 py-3 border-b border-slate-800">
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Pacientes na Fila</span>
+                    </div>
+
+                    {carregandoPacientes ? (
+                      <div className="p-4 space-y-3">
+                        <Skeleton variant="card" />
+                        <Skeleton variant="card" />
+                        <Skeleton variant="card" />
+                      </div>
+                    ) : pacientesFiltrados.length === 0 ? (
+                      <div className="p-6">
+                        <EmptyState icon={SearchX} title="Nenhum paciente na fila"
+                          description="Quando pacientes desta região solicitarem teleconsulta, aparecerão aqui." />
+                      </div>
+                    ) : (
+                      <div className="overflow-x-auto">
+                        <table className="w-full text-sm">
+                          <thead>
+                            <tr className="border-b border-slate-800">
+                              <th className="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Paciente</th>
+                              <th className="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Sintoma</th>
+                              <th className="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Urgência</th>
+                              <th className="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider hidden md:table-cell">Espera</th>
+                              <th className="text-right px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Ações</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {pacientesFiltrados.map((p, i) => (
+                              <tr key={p.id} className={`border-b border-slate-800/50 transition-colors hover:bg-slate-800/60 ${i % 2 === 1 ? 'bg-slate-800/30' : ''}`}>
+                                <td className="px-4 py-3">
+                                  <div className="flex items-center gap-3">
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0 ${p.score_match >= 70 ? 'bg-red-500/10 text-red-400' : 'bg-slate-700 text-slate-300'}`}>
+                                      {p.nome.charAt(0)}
+                                    </div>
+                                    <div>
+                                      <button className="font-semibold text-white text-sm hover:text-sky-400 transition-colors text-left"
+                                        onClick={() => navigate(`/prontuario/${p.nome}`)}>
+                                        {p.nome}
+                                      </button>
+                                      <p className="text-xs text-slate-500">{p.idade} anos · {p.cidade}</p>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="px-4 py-3 text-slate-400 text-sm hidden sm:table-cell">
+                                  <div className="flex items-center gap-1.5">
+                                    <AlertCircle size={12} className={p.score_match >= 70 ? 'text-red-400' : 'text-slate-500'} />
+                                    {p.tipo_dor}
+                                  </div>
+                                </td>
+                                <td className="px-4 py-3">
+                                  <div className="flex items-center gap-2">
+                                    <UrgenciaBadge score={p.score_match} />
+                                    <span className="text-xs text-slate-500 font-mono">{p.score_match}%</span>
+                                    {p.score_match >= 70 && <Star size={11} className="text-amber-400 fill-amber-400" />}
+                                  </div>
+                                </td>
+                                <td className="px-4 py-3 hidden md:table-cell">
+                                  {p.criadoEm ? <SLABadge criadoEm={p.criadoEm} /> : <span className="text-slate-600 text-xs">—</span>}
+                                </td>
+                                <td className="px-4 py-3 text-right">
+                                  <button onClick={() => setPacienteSelecionado(p)}
+                                    className="px-3 py-1.5 rounded-lg text-xs font-bold border border-sky-500/40 text-sky-400 hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-colors">
+                                    Aceitar
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Chat IA */}
+                <div className="hidden lg:flex lg:col-span-4 flex-col">
+                  <div className="bg-slate-900 border border-slate-800 rounded-xl flex flex-col h-[520px] sticky top-0 overflow-hidden">
+                    <div className="px-4 py-3 border-b border-slate-800 flex items-center gap-3 flex-shrink-0">
+                      <div className="bg-sky-500/10 p-1.5 rounded-lg border border-sky-500/20 text-sky-400">
+                        <MessageSquare size={16} />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-white text-sm">Assistente OrbitalCare</h3>
+                        <p className="text-xs text-slate-500">Gemini 2.5</p>
+                      </div>
+                    </div>
+                    <div className="flex-1 p-4 overflow-y-auto space-y-3">
+                      <div className="bg-slate-800 p-3 rounded-xl rounded-tl-sm text-sm text-slate-300 border border-slate-700">
+                        Doutor(a), os pacientes estão priorizados por urgência na região de <strong className="text-white">{cidadeAtiva}</strong>. Posso ajudar a analisar algum caso?
+                      </div>
+                      {respostaIA && (
+                        <div className="bg-sky-500/5 p-3 rounded-xl rounded-tl-sm text-sm text-slate-300 border border-sky-500/20 whitespace-pre-wrap">{respostaIA}</div>
+                      )}
+                      {carregandoIA && <div className="text-xs text-slate-500 font-medium animate-pulse pl-1">Analisando...</div>}
+                    </div>
+                    <div className="p-3 border-t border-slate-800 flex gap-2 flex-shrink-0">
+                      <input type="text" placeholder="Ex: Qual o caso mais urgente?" value={pergunta}
+                        onChange={e => setPergunta(e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && enviarPerguntaIA()}
+                        className="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-500 focus:ring-1 focus:ring-sky-500/40 focus:border-sky-500 outline-none" />
+                      <button onClick={enviarPerguntaIA}
+                        className="bg-sky-500 text-white p-2 rounded-lg hover:bg-sky-600 transition-colors flex-shrink-0">
+                        <Send size={16} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ── Meus Pacientes ── */}
+          {telaAtiva === 'pacientes' && (
+            <div className="animate-fade-in space-y-5">
+              <div>
+                <h2 className="text-xl font-bold text-white">Meus Pacientes</h2>
+                <p className="text-slate-400 text-sm mt-0.5">Pacientes em teleconsulta sob seus cuidados.</p>
+              </div>
+
+              {carregandoMeusPacientes ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Skeleton variant="card" />
+                  <Skeleton variant="card" />
+                </div>
+              ) : meusPacientes.length === 0 ? (
+                <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                  <EmptyState icon={Users} title="Ainda sem pacientes ativos"
+                    description="Acesse a Fila de Triagem, avalie um paciente e aceite o atendimento."
+                    action={{ label: 'Ver Fila de Triagem', onClick: () => setTelaAtiva('painel') }} />
+                </div>
+              ) : (
+                <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-slate-800">
+                          <th className="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Paciente</th>
+                          <th className="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:table-cell">Contato</th>
+                          <th className="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider hidden md:table-cell">Status Ticket</th>
+                          <th className="text-left px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider hidden lg:table-cell">Agendamento</th>
+                          <th className="text-right px-4 py-3 text-xs font-bold text-slate-500 uppercase tracking-wider">Ações</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {meusPacientes.map((p, i) => (
+                          <tr key={p.id} className={`border-b border-slate-800/50 transition-colors hover:bg-slate-800/60 ${i % 2 === 1 ? 'bg-slate-800/30' : ''}`}>
+                            <td className="px-4 py-3">
+                              <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 rounded-full bg-sky-500 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
+                                  {p.nome.charAt(0)}
+                                </div>
+                                <div>
+                                  <p className="font-semibold text-white text-sm">{p.nome}</p>
+                                  <p className="text-xs text-slate-500">{p.idade} anos · {p.cidade}</p>
+                                </div>
+                              </div>
+                            </td>
+                            <td className="px-4 py-3 hidden sm:table-cell">
+                              <p className="text-slate-400 text-xs flex items-center gap-1"><Phone size={11} /> {p.telefone || '—'}</p>
+                              <p className="text-slate-500 text-xs flex items-center gap-1 mt-0.5"><MapPin size={11} /> {p.pais}</p>
+                            </td>
+                            <td className="px-4 py-3 hidden md:table-cell">
+                              {p.status ? <TicketBadge status={p.status} size="sm" /> : <Badge variant="success">Ativo</Badge>}
+                            </td>
+                            <td className="px-4 py-3 hidden lg:table-cell">
+                              <StatusAgendamento oferta={ofertasMapa[p.nome]} temAgendamento={agendamentos.some(a => a.paciente?.nome === p.nome)} />
+                            </td>
+                            <td className="px-4 py-3 text-right">
+                              <div className="flex items-center justify-end gap-1.5">
+                                <button onClick={() => abrirFicha(p)}
+                                  className="p-1.5 rounded-lg text-slate-400 hover:text-sky-400 hover:bg-sky-500/10 border border-transparent hover:border-sky-500/20 transition-colors" title="Ver Prontuário">
+                                  <CalendarDays size={15} />
+                                </button>
+                                <button onClick={() => imprimirRelatorio(p, usuarioLogado)}
+                                  className="p-1.5 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors" title="Gerar Relatório">
+                                  <FileText size={15} />
+                                </button>
+                                <button onClick={() => setConfirmarCancelamento(p)}
+                                  className="p-1.5 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-500/10 transition-colors" title="Encerrar atendimento">
+                                  <X size={15} />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── Teleconsultas ── */}
+          {telaAtiva === 'agenda' && (
+            <div className="animate-fade-in space-y-5">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-bold text-white">Teleconsultas</h2>
+                  <p className="text-slate-400 text-sm mt-0.5">Próximas consultas agendadas na plataforma.</p>
+                </div>
+                <button onClick={() => {
+                  if (meusPacientes.length === 0) { showMensagem('Aceite um paciente na Triagem primeiro!'); setTelaAtiva('painel'); }
+                  else setTelaAtiva('pacientes');
+                }} className="px-3 py-1.5 rounded-lg text-xs font-bold border border-emerald-500/40 text-emerald-400 hover:bg-emerald-500 hover:text-white hover:border-emerald-500 transition-colors flex items-center gap-1.5">
+                  <Video size={14} /> Nova Consulta
+                </button>
+              </div>
+
+              {agendamentos.length === 0 ? (
+                <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+                  <EmptyState icon={CalendarDays} title="Sem teleconsultas agendadas"
+                    description="Vá a Meus Pacientes para propor horários."
+                    action={{ label: 'Ir para Meus Pacientes', onClick: () => setTelaAtiva('pacientes') }} />
+                </div>
+              ) : (
+                <div className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                  <div className="divide-y divide-slate-800">
+                    {agendamentos.sort((a, b) => a.data.localeCompare(b.data)).map(ag => {
+                      const { diaSemana, diaMes } = formatarDataAgenda(ag.data);
+                      return (
+                        <div key={ag.id} className="px-5 py-4 flex items-start gap-5 hover:bg-slate-800/50 transition-colors">
+                          <div className="text-center w-12 flex-shrink-0">
+                            <p className="text-xs font-bold text-slate-500 uppercase">{diaSemana}</p>
+                            <p className="text-2xl font-black text-sky-400">{diaMes}</p>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-bold text-white">{ag.tipo}</p>
+                            <p className="text-slate-500 text-xs font-mono mt-0.5">
+                              {gerarTicket(ag.paciente.id)} · {abreviarNome(ag.paciente.nome)}
+                            </p>
+                            <div className="flex items-center gap-3 mt-2 flex-wrap">
+                              <span className="bg-sky-500/10 text-sky-400 border border-sky-500/20 px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5">
+                                <Clock size={12} /> {ag.hora}
+                              </span>
+                              <span className="bg-slate-800 text-slate-400 border border-slate-700 px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1.5">
+                                <MapPin size={12} /> Via Satélite
+                              </span>
+                            </div>
+                            <button onClick={() => handleConcluirConsulta(ag.id)}
+                              className="mt-3 text-xs font-bold text-emerald-400 border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 rounded-lg hover:bg-emerald-500/20 transition-colors flex items-center gap-1.5">
+                              <CheckCircle2 size={13} /> Marcar como Concluída
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </main>
+      </div>
 
       {/* ── Modais ── */}
       {pacienteSelecionado && (
         <ModalAvaliarPaciente
           paciente={pacienteSelecionado}
           onClose={() => setPacienteSelecionado(null)}
-          onAdotar={(p) => atualizarStatusPaciente(p, 'adotado')}
+          onAdotar={p => atualizarStatusPaciente(p, 'adotado')}
         />
       )}
 
-      {/* ── Modal: confirmar encerramento de atendimento ── */}
       {confirmarCancelamento && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-          onClick={() => setConfirmarCancelamento(null)}
-        >
-          <div
-            className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 border border-slate-100 dark:border-slate-700"
-            onClick={e => e.stopPropagation()}
-          >
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+          onClick={() => setConfirmarCancelamento(null)}>
+          <div className="bg-slate-900 rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4 border border-slate-700"
+            onClick={e => e.stopPropagation()}>
             <div className="flex items-center gap-4 mb-5">
-              <div className="bg-red-50 dark:bg-red-950/30 p-3 rounded-xl shrink-0">
-                <X size={24} className="text-red-500" />
+              <div className="bg-red-500/10 p-3 rounded-xl shrink-0">
+                <X size={24} className="text-red-400" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-gray-800 dark:text-white">Remover Paciente</h3>
-                <p className="text-sm text-gray-500 dark:text-slate-400 truncate max-w-xs">{confirmarCancelamento.nome}</p>
+                <h3 className="text-lg font-bold text-white">Remover Paciente</h3>
+                <p className="text-sm text-slate-400 truncate max-w-xs">{confirmarCancelamento.nome}</p>
               </div>
             </div>
-            <p className="text-gray-600 dark:text-slate-300 text-sm mb-8 leading-relaxed">
-              Tem certeza? <strong className="text-gray-800 dark:text-white">{confirmarCancelamento.nome}</strong> voltará para a fila de triagem e ficará disponível para outros médicos.
+            <p className="text-slate-300 text-sm mb-8 leading-relaxed">
+              Tem certeza? <strong className="text-white">{confirmarCancelamento.nome}</strong> voltará para a fila de triagem.
             </p>
             <div className="flex gap-3">
-              <button
-                onClick={() => setConfirmarCancelamento(null)}
-                className="flex-1 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 text-gray-600 dark:text-slate-300 font-bold text-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-              >
+              <button onClick={() => setConfirmarCancelamento(null)}
+                className="flex-1 px-4 py-3 rounded-xl border border-slate-700 text-slate-400 font-bold text-sm hover:bg-slate-800 transition-colors">
                 Voltar
               </button>
-              <button
-                onClick={() => { const p = confirmarCancelamento; setConfirmarCancelamento(null); atualizarStatusPaciente(p, 'disponivel'); }}
-                className="flex-1 px-4 py-3 rounded-xl bg-red-500 text-white font-bold text-sm hover:bg-red-600 transition-colors"
-              >
+              <button onClick={() => { const p = confirmarCancelamento; setConfirmarCancelamento(null); atualizarStatusPaciente(p, 'disponivel'); }}
+                className="flex-1 px-4 py-3 rounded-xl bg-red-500 text-white font-bold text-sm hover:bg-red-600 transition-colors">
                 Confirmar
               </button>
             </div>
@@ -815,7 +848,7 @@ export function MedicoDashboard() {
           historicoTicket={historicoFichaAtiva}
           carregandoHistorico={carregandoHistoricoFicha}
           onClose={() => setFichaAtiva(null)}
-          onGerarRelatorio={(p) => imprimirRelatorio(p, usuarioLogado)}
+          onGerarRelatorio={p => imprimirRelatorio(p, usuarioLogado)}
           onAdicionarSlot={handleAdicionarSlot}
           onRemoverSlot={handleRemoverSlot}
           onEnviarOferta={handleEnviarOferta}
@@ -825,7 +858,6 @@ export function MedicoDashboard() {
           setProcedimentoOferta={setProcedimentoOferta}
         />
       )}
-
     </div>
   );
 }
