@@ -44,7 +44,7 @@ const integrantes: Integrante[] = [
     turma: '1TDSPB',
     github: 'https://github.com/Kayque2012',
     linkedin: 'https://www.linkedin.com/in/kayque-duarte-b24313361/',
-    papel: 'Java & Business Model ',
+    papel: 'Java & Business Model',
   },
 ];
 
