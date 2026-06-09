@@ -18,7 +18,7 @@ export function Prontuario() {
 
         <div className="flex items-center gap-4 mb-8">
           <div className="w-16 h-16 bg-orange-100 dark:bg-orange-950/30 text-[#FF8C00] rounded-2xl flex items-center justify-center font-black text-2xl">
-            {nome?.charAt(0)}
+            {nome?.charAt(0).toUpperCase()}
           </div>
           <div>
             <h2 className="text-3xl font-black text-gray-800 dark:text-white">{nome}</h2>
