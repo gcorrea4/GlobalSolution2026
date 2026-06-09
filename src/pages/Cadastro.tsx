@@ -5,9 +5,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { DADOS_PAISES } from '../data/estadosCidades';
 import { API_URL } from '../config';
 import {
-  Heart, User, Stethoscope, Eye, EyeOff, Mail, Lock,
+  Satellite, User, Stethoscope, Eye, EyeOff, Mail, Lock,
   MapPin, Globe, CheckCircle2, AlertCircle, ArrowRight,
-  Shield, Users, Smile,
+  Shield, Users, Activity,
 } from 'lucide-react';
 
 interface CadastroFormData {
@@ -142,43 +142,46 @@ export function Cadastro() {
   const inputBase =
     'w-full rounded-xl border-2 bg-gray-50 dark:bg-slate-700 px-4 py-3 text-sm text-gray-800 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:bg-white dark:focus:bg-slate-600 transition-all';
   const inputClass = (hasError: boolean) =>
-    `${inputBase} ${hasError ? 'border-red-400 focus:border-red-500' : 'border-gray-200 focus:border-[#FF8C00]'}`;
+    `${inputBase} ${hasError ? 'border-red-400 focus:border-red-500' : 'border-gray-200 dark:border-slate-600 focus:border-[#0EA5E9]'}`;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50/40 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 flex items-start justify-center pt-16 pb-10 px-4 font-sans">
-      <div className="w-full max-w-5xl bg-white dark:bg-slate-800 rounded-3xl shadow-2xl shadow-orange-100/60 dark:shadow-slate-900/50 overflow-hidden flex my-6">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-sky-50/40 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 flex items-start justify-center pt-16 pb-10 px-4 font-sans">
+      <div className="w-full max-w-5xl bg-white dark:bg-slate-800 rounded-3xl shadow-2xl shadow-sky-100/60 dark:shadow-slate-900/50 overflow-hidden flex my-6">
 
         {/* ── Painel esquerdo — branding (desktop only) ── */}
-        <div className="hidden lg:flex flex-col justify-between w-[360px] flex-shrink-0 bg-gradient-to-br from-[#FF8C00] to-orange-600 text-white p-10">
+        <div className="hidden lg:flex flex-col justify-between w-[360px] flex-shrink-0 bg-gradient-to-br from-[#0EA5E9] to-sky-700 text-white p-10">
           <div>
             <div className="flex items-center gap-2 mb-12">
-              <Heart size={22} className="fill-white" />
-              <span className="font-black text-xl tracking-tight">Turma do Bem</span>
+              <Satellite size={22} className="text-white" />
+              <div>
+                <span className="font-black text-xl tracking-tight block">OrbitalCare</span>
+                <span className="text-sky-100 text-xs">Telemedicina por satélite</span>
+              </div>
             </div>
             <h2 className="text-3xl font-black leading-snug mb-4">
-              Junte-se a nós e transforme sorrisos
+              Junte-se e leve saúde a quem mais precisa.
             </h2>
-            <p className="text-orange-100 text-sm leading-relaxed">
-              Cadastre-se gratuitamente e faça parte de uma comunidade que já transformou mais de 2.400 vidas.
+            <p className="text-sky-100 text-sm leading-relaxed">
+              Cadastre-se gratuitamente e faça parte da maior rede de telemedicina rural do Brasil.
             </p>
           </div>
 
           <div className="space-y-4">
             {[
-              { icon: <Smile size={17} />, text: '2.400+ beneficiários atendidos' },
-              { icon: <Stethoscope size={17} />, text: '180+ dentistas voluntários' },
+              { icon: <Activity size={17} />, text: '2.500+ teleconsultas realizadas' },
+              { icon: <Stethoscope size={17} />, text: '350+ médicos voluntários' },
               { icon: <Shield size={17} />, text: 'Dados protegidos e seguros' },
             ].map(item => (
               <div key={item.text} className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
                   {item.icon}
                 </div>
-                <span className="text-sm font-medium text-orange-50">{item.text}</span>
+                <span className="text-sm font-medium text-sky-50">{item.text}</span>
               </div>
             ))}
           </div>
 
-          <p className="text-xs text-orange-200 mt-8">
+          <p className="text-xs text-sky-200 mt-8">
             Já tem conta?{' '}
             <Link to="/login" className="text-white font-bold underline underline-offset-2">Faça login</Link>
           </p>
@@ -227,8 +230,8 @@ export function Cadastro() {
               <label className="block text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-2">Eu sou...</label>
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { value: 'paciente', label: 'Beneficiário', sub: 'Preciso de atendimento', icon: <Users size={20} /> },
-                  { value: 'dentista', label: 'Dentista', sub: 'Quero ser voluntário', icon: <Stethoscope size={20} /> },
+                  { value: 'paciente', label: 'Paciente', sub: 'Preciso de atendimento', icon: <Users size={20} /> },
+                  { value: 'dentista', label: 'Médico', sub: 'Quero ser voluntário', icon: <Stethoscope size={20} /> },
                 ].map(opt => (
                   <button
                     key={opt.value}
@@ -239,11 +242,11 @@ export function Cadastro() {
                     }}
                     className={`flex flex-col items-start gap-1.5 p-4 rounded-xl border-2 text-left transition-all ${
                       tipoPerfil === opt.value
-                        ? 'border-[#FF8C00] bg-orange-50 dark:bg-orange-950/30 shadow-sm shadow-orange-100'
-                        : 'border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 hover:border-orange-200 dark:hover:border-orange-700/60 hover:bg-orange-50/40 dark:hover:bg-orange-950/20'
+                        ? 'border-[#0EA5E9] bg-sky-50 dark:bg-sky-950/30 shadow-sm shadow-sky-100'
+                        : 'border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 hover:border-sky-200 dark:hover:border-sky-700/60 hover:bg-sky-50/40 dark:hover:bg-sky-950/20'
                     }`}
                   >
-                    <span className={tipoPerfil === opt.value ? 'text-[#FF8C00]' : 'text-gray-400 dark:text-slate-400'}>
+                    <span className={tipoPerfil === opt.value ? 'text-[#0EA5E9]' : 'text-gray-400 dark:text-slate-400'}>
                       {opt.icon}
                     </span>
                     <span className="font-bold text-sm text-gray-900 dark:text-white leading-none">{opt.label}</span>
@@ -276,7 +279,7 @@ export function Cadastro() {
 
             {tipoPerfil === 'dentista' && (
               <div>
-                <label className="block text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-2">CRO</label>
+                <label className="block text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wider mb-2">CRM</label>
                 <input
                   type="text"
                   placeholder="12345-SP"
@@ -337,7 +340,7 @@ export function Cadastro() {
                     <div>
                       <label className="block text-xs font-semibold text-gray-500 dark:text-slate-400 mb-1.5">Estado / Província</label>
                       <select
-                        className="w-full rounded-xl border-2 border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 px-4 py-3 text-sm text-gray-800 dark:text-slate-100 focus:outline-none focus:border-[#FF8C00] focus:bg-white dark:focus:bg-slate-600 transition-all"
+                        className="w-full rounded-xl border-2 border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 px-4 py-3 text-sm text-gray-800 dark:text-slate-100 focus:outline-none focus:border-[#0EA5E9] focus:bg-white dark:focus:bg-slate-600 transition-all"
                         value={estadoSelecionado}
                         onChange={(e) => {
                           setEstadoSelecionado(e.target.value);
@@ -375,7 +378,7 @@ export function Cadastro() {
                       <p className="text-red-500 text-xs mt-1 font-semibold">{cepErro}</p>
                     )}
                     {cepDados && !cepLoading && (
-                      <p className="text-xs text-[#FF8C00] font-semibold mt-1 flex items-center gap-1">
+                      <p className="text-xs text-[#0EA5E9] font-semibold mt-1 flex items-center gap-1">
                         <CheckCircle2 size={12} />
                         {cepDados.logradouro}{cepDados.bairro ? `, ${cepDados.bairro}` : ''}
                       </p>
@@ -389,7 +392,7 @@ export function Cadastro() {
                     <label className="block text-xs font-semibold text-gray-500 dark:text-slate-400 mb-1.5">
                       Cidade
                       {cidadeValida && (
-                        <span className="ml-2 text-[#FF8C00] font-semibold normal-case">
+                        <span className="ml-2 text-[#0EA5E9] font-semibold normal-case">
                           ✓ {cidadeValida}
                         </span>
                       )}
@@ -398,8 +401,8 @@ export function Cadastro() {
                       type="text"
                       placeholder="Digite para buscar sua cidade..."
                       className={`w-full rounded-xl border-2 ${
-                        cidadeValida ? 'border-[#FF8C00] bg-orange-50/40 dark:bg-orange-950/20' : 'border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700'
-                      } px-4 py-3 pr-10 text-sm text-gray-800 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:border-[#FF8C00] focus:bg-white dark:focus:bg-slate-600 transition-all`}
+                        cidadeValida ? 'border-[#0EA5E9] bg-sky-50/40 dark:bg-sky-950/20' : 'border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700'
+                      } px-4 py-3 pr-10 text-sm text-gray-800 dark:text-slate-100 placeholder-gray-400 dark:placeholder-slate-400 focus:outline-none focus:border-[#0EA5E9] focus:bg-white dark:focus:bg-slate-600 transition-all`}
                       value={cidadeValida || cidadeInput}
                       onChange={(e) => {
                         setCidadeValida('');
@@ -424,7 +427,7 @@ export function Cadastro() {
                         {cidadesFiltradas.map(cidade => (
                           <li
                             key={cidade}
-                            className="px-4 py-2.5 cursor-pointer hover:bg-orange-50 dark:hover:bg-orange-950/30 hover:text-[#FF8C00] dark:text-slate-200 font-medium text-sm border-b border-gray-50 dark:border-slate-700 last:border-0"
+                            className="px-4 py-2.5 cursor-pointer hover:bg-sky-50 dark:hover:bg-sky-950/30 hover:text-sky-600 dark:text-slate-200 font-medium text-sm border-b border-gray-50 dark:border-slate-700 last:border-0"
                             onMouseDown={() => {
                               setCidadeValida(cidade);
                               setCidadeInput('');
@@ -538,7 +541,7 @@ export function Cadastro() {
             {/* Botão submit */}
             <button
               type="submit"
-              className="w-full flex items-center justify-center gap-2 bg-[#FF8C00] hover:bg-orange-600 text-white py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-200 mt-2"
+              className="w-full flex items-center justify-center gap-2 bg-[#0EA5E9] hover:bg-sky-600 text-white py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-sky-200 mt-2"
             >
               Concluir Registro
               <ArrowRight size={17} />
@@ -549,11 +552,11 @@ export function Cadastro() {
           <div className="mt-6 pt-5 border-t border-gray-100 dark:border-slate-700 flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-gray-500 dark:text-slate-400">
             <p>
               Já tem conta?{' '}
-              <Link to="/login" className="text-[#FF8C00] font-bold hover:underline">Faça login</Link>
+              <Link to="/login" className="text-[#0EA5E9] font-bold hover:underline">Faça login</Link>
             </p>
             <p>
               Quer apoiar?{' '}
-              <Link to="/doador" className="text-[#FF8C00] font-bold hover:underline">Seja um Doador</Link>
+              <Link to="/doador" className="text-[#0EA5E9] font-bold hover:underline">Seja um Doador</Link>
             </p>
           </div>
         </div>

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { API_URL } from '../config';
-import { Eye, EyeOff, Smile, Heart, Users, ArrowRight, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Users, ArrowRight, Loader2, Satellite, Activity, MapPin } from 'lucide-react';
 
 interface LoginFormData {
   email?: string;
@@ -84,8 +84,9 @@ export function Login() {
         sessionStorage.setItem('userId', String(usuario.id || ''));
         if (usuario.token) sessionStorage.setItem('authToken', usuario.token);
 
-        if (usuario.tipo === 'dentista' && usuario.cidade && usuario.cidade !== 'N/A') {
+        if ((usuario.tipo === 'dentista' || usuario.tipo === 'medico') && usuario.cidade && usuario.cidade !== 'N/A') {
           sessionStorage.setItem('dentistaCidade', usuario.cidade);
+          sessionStorage.setItem('medicoCidade', usuario.cidade);
         }
 
         sessionStorage.setItem('jaLogouAntes', '1');
@@ -93,7 +94,7 @@ export function Login() {
 
         setTimeout(() => {
           if (usuario.tipo === 'admin') navigate('/dashboard/admin');
-          else if (usuario.tipo === 'dentista' || usuario.tipo === 'dev') navigate('/dashboard/dentista');
+          else if (usuario.tipo === 'dentista' || usuario.tipo === 'medico' || usuario.tipo === 'dev') navigate('/dashboard/medico');
           else if (usuario.tipo === 'paciente') navigate('/dashboard/paciente');
           else navigate('/');
         }, 1000);
@@ -108,35 +109,38 @@ export function Login() {
   };
 
   const stats = [
-    { icon: Smile,  value: '2.400+', label: 'Sorrisos' },
-    { icon: Heart,  value: '180+',   label: 'Dentistas' },
-    { icon: Users,  value: '1.800+', label: 'Jovens' },
+    { icon: Activity, value: '2.500+', label: 'Teleconsultas' },
+    { icon: Users,    value: '350+',   label: 'Médicos' },
+    { icon: MapPin,   value: '180+',   label: 'Regiões' },
   ];
 
   return (
     <main className="min-h-screen flex bg-white dark:bg-slate-900 transition-colors duration-300">
 
       {/* ── Painel esquerdo — identidade visual ── */}
-      <div className="hidden lg:flex lg:w-[45%] bg-gradient-to-br from-[#FF8C00] via-[#F5820A] to-[#E06000] flex-col justify-between p-12 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-[45%] bg-gradient-to-br from-[#0EA5E9] via-sky-500 to-sky-700 flex-col justify-between p-12 relative overflow-hidden">
         {/* Círculos decorativos */}
         <div className="absolute -right-24 -top-24 w-80 h-80 bg-white/10 rounded-full pointer-events-none" />
         <div className="absolute -left-12 bottom-32 w-56 h-56 bg-white/10 rounded-full pointer-events-none" />
         <div className="absolute right-16 bottom-16 w-32 h-32 bg-white/10 rounded-full pointer-events-none" />
 
         {/* Logo */}
-        <div className="relative z-10 mt-9">
-          <h1 className="text-2xl font-black text-white tracking-tight">Turma do Bem</h1>
-          <p className="text-orange-100 text-sm mt-0.5">Odontologia voluntária para jovens</p>
+        <div className="relative z-10 mt-9 flex items-center gap-2">
+          <Satellite size={22} className="text-white" />
+          <div>
+            <h1 className="text-2xl font-black text-white tracking-tight">OrbitalCare</h1>
+            <p className="text-sky-100 text-sm mt-0.5">Telemedicina por satélite</p>
+          </div>
         </div>
 
         {/* Conteúdo central */}
         <div className="relative z-10 space-y-6">
           <div>
             <h2 className="text-5xl font-black text-white leading-[1.1] mb-4">
-              Sorrisos que<br />transformam<br />vidas
+              Saúde onde<br />o sinal<br />chega.
             </h2>
-            <p className="text-orange-100 text-lg leading-relaxed max-w-sm">
-              Conectamos jovens em vulnerabilidade social com dentistas voluntários de forma gratuita e humanizada.
+            <p className="text-sky-100 text-lg leading-relaxed max-w-sm">
+              Conectamos médicos voluntários a pacientes em regiões remotas via telemedicina por satélite — gratuito e inteligente.
             </p>
           </div>
 
@@ -146,21 +150,21 @@ export function Login() {
               <div key={label} className="bg-white/15 backdrop-blur-sm rounded-2xl p-4 text-center border border-white/20">
                 <Icon size={22} className="text-white mx-auto mb-2" />
                 <p className="text-white font-black text-xl leading-none">{value}</p>
-                <p className="text-orange-200 text-xs mt-1 font-medium">{label}</p>
+                <p className="text-sky-200 text-xs mt-1 font-medium">{label}</p>
               </div>
             ))}
           </div>
 
-          {/* Depoimento / social proof */}
+          {/* Depoimento */}
           <div className="bg-white/15 rounded-2xl p-5 border border-white/20">
             <p className="text-white text-sm leading-relaxed italic">
-              "A Turma do Bem mudou minha vida. Hoje sorrio sem vergonha."
+              "A teleconsulta via OrbitalCare foi a única forma de eu ter acesso a um médico aqui no interior."
             </p>
-            <p className="text-orange-200 text-xs mt-2 font-semibold">— Ana, 16 anos · São Paulo, SP</p>
+            <p className="text-sky-200 text-xs mt-2 font-semibold">— Maria, 43 anos · Marabá, PA</p>
           </div>
         </div>
 
-        <p className="text-orange-300 text-xs relative z-10">© 2026 Turma do Bem. Todos os direitos reservados.</p>
+        <p className="text-sky-300 text-xs relative z-10">© 2026 OrbitalCare. Todos os direitos reservados.</p>
       </div>
 
       {/* ── Painel direito — formulário ── */}
@@ -168,9 +172,12 @@ export function Login() {
         <div className="w-full max-w-[420px]">
 
           {/* Logo mobile */}
-          <div className="lg:hidden text-center mb-8">
-            <h1 className="text-2xl font-black text-[#FF8C00]">Turma do Bem</h1>
-            <p className="text-gray-400 text-sm mt-0.5">Odontologia voluntária para jovens</p>
+          <div className="lg:hidden text-center mb-8 flex flex-col items-center gap-1">
+            <div className="flex items-center gap-2">
+              <Satellite size={20} className="text-[#0EA5E9]" />
+              <h1 className="text-2xl font-black text-[#0EA5E9]">OrbitalCare</h1>
+            </div>
+            <p className="text-gray-400 text-sm">Telemedicina por satélite</p>
           </div>
 
           {/* Título */}
@@ -179,7 +186,7 @@ export function Login() {
               {jaLogouAntes ? 'Bem-vindo de volta!' : 'Acessar conta'}
             </h2>
             <p className="text-gray-500 dark:text-slate-400 mt-2 text-sm">
-              Entre para acessar o painel da Turma do Bem.
+              Entre para acessar o painel OrbitalCare.
             </p>
           </div>
 
@@ -204,7 +211,7 @@ export function Login() {
                 placeholder="seu@email.com"
                 autoComplete="email"
                 className={`w-full px-4 py-3.5 bg-white dark:bg-slate-800 border-2 rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 outline-none transition-colors ${
-                  errors.email ? 'border-red-400 focus:border-red-500' : 'border-gray-200 dark:border-slate-600 focus:border-[#FF8C00]'
+                  errors.email ? 'border-red-400 focus:border-red-500' : 'border-gray-200 dark:border-slate-600 focus:border-[#0EA5E9]'
                 }`}
                 {...register('email', { required: 'O e-mail é obrigatório' })}
               />
@@ -218,7 +225,7 @@ export function Login() {
                 <button
                   type="button"
                   onClick={handleEsqueciSenha}
-                  className="text-xs text-[#FF8C00] font-semibold hover:underline"
+                  className="text-xs text-sky-500 font-semibold hover:underline"
                 >
                   Esqueci minha senha
                 </button>
@@ -229,7 +236,7 @@ export function Login() {
                   placeholder="Mínimo 6 caracteres"
                   autoComplete="current-password"
                   className={`w-full px-4 py-3.5 pr-12 bg-white dark:bg-slate-800 border-2 rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-slate-500 outline-none transition-colors ${
-                    errors.senha ? 'border-red-400 focus:border-red-500' : 'border-gray-200 dark:border-slate-600 focus:border-[#FF8C00]'
+                    errors.senha ? 'border-red-400 focus:border-red-500' : 'border-gray-200 dark:border-slate-600 focus:border-[#0EA5E9]'
                   }`}
                   {...register('senha', { required: 'A senha é obrigatória' })}
                 />
@@ -246,7 +253,7 @@ export function Login() {
 
             {/* Redefinição de senha */}
             {mostrarRedefinicao && (
-              <div className="p-5 bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-900/50 rounded-2xl space-y-4">
+              <div className="p-5 bg-sky-50 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-900/50 rounded-2xl space-y-4">
                 <p className="text-sm font-bold text-gray-800 dark:text-slate-200">Redefinir senha</p>
                 <div>
                   <label className="text-xs font-semibold text-gray-600 dark:text-slate-400 mb-1.5 block">Nova Senha</label>
@@ -255,7 +262,7 @@ export function Login() {
                     value={novaSenha}
                     onChange={e => setNovaSenha(e.target.value)}
                     placeholder="Mínimo 6 caracteres"
-                    className="w-full px-4 py-3 border-2 border-orange-200 dark:border-orange-900/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-xl text-sm outline-none focus:border-[#FF8C00]"
+                    className="w-full px-4 py-3 border-2 border-sky-200 dark:border-sky-900/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-xl text-sm outline-none focus:border-[#0EA5E9]"
                   />
                 </div>
                 <div>
@@ -265,14 +272,14 @@ export function Login() {
                     value={confirmarSenha}
                     onChange={e => setConfirmarSenha(e.target.value)}
                     placeholder="Repita a senha"
-                    className="w-full px-4 py-3 border-2 border-orange-200 dark:border-orange-900/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-xl text-sm outline-none focus:border-[#FF8C00]"
+                    className="w-full px-4 py-3 border-2 border-sky-200 dark:border-sky-900/50 bg-white dark:bg-slate-800 text-gray-900 dark:text-white rounded-xl text-sm outline-none focus:border-[#0EA5E9]"
                   />
                 </div>
                 <button
                   type="button"
                   onClick={handleRedefinirSenha}
                   disabled={enviandoRedefinicao}
-                  className="w-full bg-[#FF8C00] text-white font-bold py-3 rounded-xl hover:bg-[#E67E22] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+                  className="w-full bg-[#0EA5E9] text-white font-bold py-3 rounded-xl hover:bg-sky-600 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
                 >
                   {enviandoRedefinicao && <Loader2 size={16} className="animate-spin" />}
                   {enviandoRedefinicao ? 'Redefinindo...' : 'Redefinir Senha'}
@@ -284,7 +291,7 @@ export function Login() {
             <button
               type="submit"
               disabled={carregando}
-              className="w-full flex items-center justify-center gap-2 bg-[#FF8C00] hover:bg-[#E67E22] disabled:opacity-70 text-white font-bold py-4 rounded-xl text-base shadow-md shadow-orange-200 transition-all hover:-translate-y-0.5 active:translate-y-0 mt-2"
+              className="w-full flex items-center justify-center gap-2 bg-[#0EA5E9] hover:bg-sky-600 disabled:opacity-70 text-white font-bold py-4 rounded-xl text-base shadow-md shadow-sky-200 dark:shadow-sky-900/30 transition-all hover:-translate-y-0.5 active:translate-y-0 mt-2"
             >
               {carregando ? (
                 <><Loader2 size={20} className="animate-spin" /> Entrando...</>
@@ -298,16 +305,16 @@ export function Login() {
           <div className="mt-8 space-y-3 text-center">
             <p className="text-sm text-gray-500 dark:text-slate-400">
               Não tem uma conta?{' '}
-              <Link to="/cadastro" className="text-[#FF8C00] font-bold hover:underline">
+              <Link to="/cadastro" className="text-[#0EA5E9] font-bold hover:underline">
                 Cadastre-se grátis
               </Link>
             </p>
-            <div className="flex items-center gap-2 justify-center bg-orange-50 dark:bg-orange-950/30 border border-orange-100 dark:border-orange-900/40 rounded-xl py-3 px-4">
-              <Heart size={14} className="text-[#FF8C00]" />
+            <div className="flex items-center gap-2 justify-center bg-sky-50 dark:bg-sky-950/30 border border-sky-100 dark:border-sky-900/40 rounded-xl py-3 px-4">
+              <Satellite size={14} className="text-[#0EA5E9]" />
               <p className="text-sm text-gray-600 dark:text-slate-300">
                 Quer apoiar a causa?{' '}
-                <Link to="/Doador" className="text-[#FF8C00] font-black hover:underline">
-                  Seja um Doador
+                <Link to="/Doador" className="text-[#0EA5E9] font-black hover:underline">
+                  Seja um Apoiador
                 </Link>
               </p>
             </div>
