@@ -29,7 +29,7 @@ const MAPA_URL = `https://maps.google.com/maps?q=${encodeURIComponent(
 
 const CONTATOS = [
   { icon: Mail, label: 'Email do Projeto', valor: 'orbitalcare@fiap.edu.br', copiavel: true },
-  { icon: MessageCircle, label: 'Dúvidas e Sugestões', valor: 'gabrielcorreasouza46@gmail.com', copiavel: true },
+  { icon: MessageCircle, label: 'Dúvidas e Sugestões', valor: 'orbitalcare@fiap.edu.br', copiavel: true },
 ];
 
 const LINKS = [
