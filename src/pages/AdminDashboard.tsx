@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useMemo } from 'react';
 import { apiFetch } from '../utils/api';
-import { LayoutDashboard, Users, LogOut, MapPin, Heart, CalendarDays, Clock, TrendingUp, Smile, DollarSign, Archive, AlertTriangle, CheckCircle2, Search, UserX, FileDown, Sheet, Database } from 'lucide-react';
+import { LayoutDashboard, Users, LogOut, MapPin, Stethoscope, CalendarDays, Clock, TrendingUp, Video, Archive, AlertTriangle, CheckCircle2, Search, UserX, FileDown, Sheet, Database } from 'lucide-react';
 import { MetricasOperacionais } from './MetricasOperacionais';
 import {
   exportarPacientesPDF, exportarPacientesCSV,
@@ -17,13 +17,7 @@ import 'leaflet.heat';
 import { LATAM_COORDINATES, normalizarCidade } from '../data/latamCoordinates';
 
 // ─── Componentes internos do mapa de calor (Leaflet) ───────────────────────
-// Definidos fora do componente principal para não serem recriados a cada render.
 
-/**
- * Camada de calor (heatmap) renderizada sobre o mapa Leaflet.
- * Recebe `points` como [lat, lng, intensidade] — intensidade normalizada 0–1.
- * O hook useMap() só funciona dentro de um filho de <MapContainer>.
- */
 function HeatmapLayer({ points }: { points: [number, number, number][] }) {
   const map = useMap();
   useEffect(() => {
@@ -33,18 +27,13 @@ function HeatmapLayer({ points }: { points: [number, number, number][] }) {
       blur: 28,
       maxZoom: 10,
       max: 1.0,
-      gradient: { 0.0: '#312e81', 0.25: '#4338ca', 0.5: '#8b5cf6', 0.75: '#f97316', 1.0: '#dc2626' }
+      gradient: { 0.0: '#0c4a6e', 0.25: '#0369a1', 0.5: '#0ea5e9', 0.75: '#f97316', 1.0: '#dc2626' }
     }).addTo(map);
     return () => { map.removeLayer(heat); };
   }, [map, points]);
   return null;
 }
 
-/**
- * Marcadores circulares por cidade com tooltip de contagem.
- * O raio e a cor do círculo são proporcionais à concentração de usuários:
- *   vermelho (#dc2626) = >70% do máximo | laranja = 40–70% | roxo = <40%
- */
 function CityMarkers({ porCidade, coordsMap }: { porCidade: Record<string, number>; coordsMap: Record<string, [number, number]> }) {
   const maxQtd = Math.max(1, ...Object.values(porCidade).map(Number));
   return (
@@ -55,7 +44,7 @@ function CityMarkers({ porCidade, coordsMap }: { porCidade: Record<string, numbe
           const [lat, lng] = coordsMap[cidade];
           const ratio = Number(qtd) / maxQtd;
           const radius = 5 + ratio * 18;
-          const color = ratio > 0.7 ? '#dc2626' : ratio > 0.4 ? '#f97316' : '#8b5cf6';
+          const color = ratio > 0.7 ? '#dc2626' : ratio > 0.4 ? '#f97316' : '#0ea5e9';
           return (
             <CircleMarker
               key={cidade}
@@ -82,7 +71,7 @@ interface AgendamentoAdmin {
   dentista: string;
   data: string;
   hora: string;
-  cidade: string; 
+  cidade: string;
 }
 
 interface UsuarioPaciente {
@@ -110,13 +99,13 @@ function BotoesExportar({ onPDF, onCSV }: { onPDF: () => void; onCSV: () => void
     <div className="flex gap-2">
       <button
         onClick={onPDF}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-600 hover:text-orange-500 hover:border-orange-300 hover:bg-orange-50 dark:hover:bg-orange-950/30 transition-colors"
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-600 hover:text-sky-500 hover:border-sky-300 hover:bg-sky-50 dark:hover:bg-sky-950/30 transition-colors"
       >
         <FileDown size={13} /> PDF
       </button>
       <button
         onClick={onCSV}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-600 hover:text-orange-500 hover:border-orange-300 hover:bg-orange-50 dark:hover:bg-orange-950/30 transition-colors"
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-600 hover:text-sky-500 hover:border-sky-300 hover:bg-sky-50 dark:hover:bg-sky-950/30 transition-colors"
       >
         <Sheet size={13} /> CSV
       </button>
@@ -150,7 +139,6 @@ export function AdminDashboard() {
     coordenadas: {} as Record<string, [number, number]>,
   });
 
-  // Carrega estatísticas globais (auth centralizada em ProtectedRoute)
   useEffect(() => {
     apiFetch('/admin/estatisticas')
       .then(res => {
@@ -177,10 +165,6 @@ export function AdminDashboard() {
       });
   }, []);
 
-  /**
-   * Busca pacientes e dentistas em paralelo — sem setState, só retorna a Promise.
-   * Centralizado aqui para ser reutilizado nos 3 useEffects abaixo sem duplicar URLs.
-   */
   const fetchTodos = () =>
     Promise.all([
       apiFetch('/pacientes')
@@ -198,8 +182,6 @@ export function AdminDashboard() {
       apiFetch('/dentistas').then(r => r.json()).catch((): UsuarioDentista[] => []),
     ]);
 
-  // 1. Mount: alimenta o mapa de calor com dados iniciais.
-  //    O flag `live` evita setState em componente desmontado (memory leak / warning do React).
   useEffect(() => {
     let live = true;
     fetchTodos().then(([pacs, dents]) => {
@@ -210,9 +192,6 @@ export function AdminDashboard() {
     return () => { live = false; };
   }, []);
 
-  // 2. Ao abrir a aba "Usuários": recarrega para exibir dados atualizados.
-  //    setCarregandoUsuarios(true) é chamado no onClick do botão de navegação,
-  //    antes da mudança de telaAtiva, para mostrar o spinner imediatamente.
   useEffect(() => {
     if (telaAtiva !== 'usuarios') return;
     let live = true;
@@ -225,8 +204,6 @@ export function AdminDashboard() {
     return () => { live = false; };
   }, [telaAtiva]);
 
-  // 3. Refresh automático a cada 30s — mantém o mapa de calor atualizado
-  //    sem exigir reload da página. clearInterval no cleanup evita múltiplos timers.
   useEffect(() => {
     const id = setInterval(() => {
       fetchTodos().then(([pacs, dents]) => {
@@ -237,12 +214,10 @@ export function AdminDashboard() {
     return () => clearInterval(id);
   }, []);
 
-  // Abre o modal de confirmação — o fetch só acontece em handleConfirmarInativacao.
   const deletarUsuario = (tipo: 'pacientes' | 'dentistas', id: number, nome: string) => {
     setConfirmacaoPendente({ tipo, id, nome });
   };
 
-  // Chamada HTTP idêntica à anterior (DELETE) — apenas renomeada e movida para cá.
   const handleConfirmarInativacao = async () => {
     if (!confirmacaoPendente) return;
     const { tipo, id, nome } = confirmacaoPendente;
@@ -268,18 +243,10 @@ export function AdminDashboard() {
 
   const handleLogout = () => { sessionStorage.clear(); navigate('/login'); };
 
-  // KPIs estimados para o painel do admin — baseados no total de beneficiários cadastrados.
-  // Fórmulas definidas pela equipe de negócio (Sprint 1):
-  //   sorrisos = (beneficiários × 2) + 1450  → cada paciente impacta ~2 pessoas na família + base histórica
-  //   horas    = sorrisos × 1.5              → média de 1h30 por atendimento
-  //   economia = sorrisos × R$ 250           → custo médio evitado por consulta particular
-  const sorrisosTransformados = (statsAdmin.total_beneficiarios * 2) + 1450;
-  const horasDoadas = Math.round(sorrisosTransformados * 1.5);
-  const economiaGerada = (sorrisosTransformados * 250).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  // KPIs estimados para o painel administrativo OrbitalCare
+  const consultasRealizadas = Math.round(statsAdmin.total_beneficiarios * 2.3 + 120);
+  const regioesCovertas = Math.max(8, Math.ceil(statsAdmin.total_beneficiarios / 10));
 
-  // Agrupa pacientes + dentistas por cidade para alimentar o mapa de calor.
-  // useMemo garante que o agrupamento só recomputa quando os arrays mudam
-  // (ex: após deletarUsuario), não em todo render.
   const allCoords = useMemo(
     () => ({ ...LATAM_COORDINATES, ...statsAdmin.coordenadas }),
     [statsAdmin.coordenadas]
@@ -328,10 +295,10 @@ export function AdminDashboard() {
     (filtroStatus === null || p.statusTicket === filtroStatus)
   );
 
-const dentistasFiltrados = dentistas.filter(d =>
-  (d.nomeDentista || d.nome || '').toLowerCase().includes(filtroBusca.toLowerCase()) ||
-  (d.email || '').toLowerCase().includes(filtroBusca.toLowerCase())
-);
+  const dentistasFiltrados = dentistas.filter(d =>
+    (d.nomeDentista || d.nome || '').toLowerCase().includes(filtroBusca.toLowerCase()) ||
+    (d.email || '').toLowerCase().includes(filtroBusca.toLowerCase())
+  );
 
   useEffect(() => {
     const filtrados = pacientes.filter(p =>
@@ -342,7 +309,7 @@ const dentistasFiltrados = dentistas.filter(d =>
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 font-sans pb-16 md:pb-0 transition-colors duration-300">
-      <title>Painel Admin · Turma do Bem</title>
+      <title>Painel Admin · OrbitalCare</title>
 
       {/* ── Top navigation bar ── */}
       <header className="sticky top-0 z-40 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
@@ -350,12 +317,12 @@ const dentistasFiltrados = dentistas.filter(d =>
 
           {/* User info */}
           <div className="flex items-center gap-3 flex-shrink-0">
-            <div className="w-9 h-9 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl text-white flex items-center justify-center font-black text-base shadow-sm">
+            <div className="w-9 h-9 bg-gradient-to-br from-sky-400 to-sky-600 rounded-xl text-white flex items-center justify-center font-black text-base shadow-sm">
               {usuarioLogado.charAt(0).toUpperCase()}
             </div>
             <div className="hidden sm:block">
               <p className="text-sm font-bold text-gray-900 dark:text-white leading-none truncate max-w-[140px]">{usuarioLogado}</p>
-              <p className="text-xs text-orange-500 font-semibold mt-0.5">Administrador</p>
+              <p className="text-xs text-sky-500 font-semibold mt-0.5">Administrador</p>
             </div>
             <DemoBadge />
           </div>
@@ -375,7 +342,7 @@ const dentistasFiltrados = dentistas.filter(d =>
                 {item.icon}
                 {item.label}
                 {item.badge > 0 && (
-                  <span className="bg-orange-500 text-white text-[10px] font-black w-[18px] h-[18px] rounded-full flex items-center justify-center leading-none">
+                  <span className="bg-sky-500 text-white text-[10px] font-black w-[18px] h-[18px] rounded-full flex items-center justify-center leading-none">
                     {item.badge > 99 ? '99' : item.badge}
                   </span>
                 )}
@@ -415,13 +382,13 @@ const dentistasFiltrados = dentistas.filter(d =>
             <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div>
                 <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Gerenciar Usuários</h2>
-                <p className="text-gray-500 dark:text-slate-400 text-sm mt-1">Visualize e remova contas de pacientes e dentistas.</p>
+                <p className="text-gray-500 dark:text-slate-400 text-sm mt-1">Visualize e remova contas de pacientes e médicos.</p>
               </div>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
                 <input type="text" placeholder="Buscar por nome ou e-mail..." value={filtroBusca}
                   onChange={(e) => setFiltroBusca(e.target.value)}
-                  className="pl-9 pr-4 py-2.5 bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-sm text-gray-800 dark:text-slate-200 placeholder-gray-400 dark:placeholder-slate-400 w-full md:w-[280px] focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none" />
+                  className="pl-9 pr-4 py-2.5 bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-xl text-sm text-gray-800 dark:text-slate-200 placeholder-gray-400 dark:placeholder-slate-400 w-full md:w-[280px] focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none" />
               </div>
             </div>
 
@@ -435,7 +402,7 @@ const dentistasFiltrados = dentistas.filter(d =>
                 {/* Pacientes */}
                 <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
                   <div className="p-5 border-b border-gray-100 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-700/30 flex items-center justify-between">
-                    <h3 className="font-bold text-gray-800 dark:text-white flex items-center gap-2"><Users size={18} className="text-[#8dc63f]" /> Pacientes ({pacientesFiltrados.length})</h3>
+                    <h3 className="font-bold text-gray-800 dark:text-white flex items-center gap-2"><Users size={18} className="text-sky-500" /> Pacientes ({pacientesFiltrados.length})</h3>
                     <BotoesExportar
                       onPDF={() => exportarPacientesPDF(pacientesFiltrados)}
                       onCSV={() => exportarPacientesCSV(pacientesFiltrados)}
@@ -456,7 +423,7 @@ const dentistasFiltrados = dentistas.filter(d =>
                     ) : pacientesFiltrados.map((p) => (
                       <div key={p.id} className="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-slate-700/40 transition-colors">
                         <div className="flex items-center gap-3 min-w-0">
-                          <div className="w-9 h-9 rounded-full bg-orange-100 dark:bg-orange-950/40 text-[#FF8C00] flex items-center justify-center font-bold text-sm shrink-0">
+                          <div className="w-9 h-9 rounded-full bg-sky-100 dark:bg-sky-950/40 text-sky-500 flex items-center justify-center font-bold text-sm shrink-0">
                             {(p.nomePaciente || p.nome || '?').charAt(0)}
                           </div>
                           <div className="min-w-0">
@@ -476,10 +443,10 @@ const dentistasFiltrados = dentistas.filter(d =>
                   </div>
                 </div>
 
-                {/* Dentistas */}
+                {/* Médicos */}
                 <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden">
                   <div className="p-5 border-b border-gray-100 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-700/30 flex items-center justify-between">
-                    <h3 className="font-bold text-gray-800 dark:text-white flex items-center gap-2"><Heart size={18} className="text-[#FF8C00]" /> Dentistas ({dentistasFiltrados.length})</h3>
+                    <h3 className="font-bold text-gray-800 dark:text-white flex items-center gap-2"><Stethoscope size={18} className="text-sky-500" /> Médicos ({dentistasFiltrados.length})</h3>
                     <BotoesExportar
                       onPDF={() => exportarDentistasPDF(dentistasFiltrados)}
                       onCSV={() => exportarDentistasCSV(dentistasFiltrados)}
@@ -487,17 +454,17 @@ const dentistasFiltrados = dentistas.filter(d =>
                   </div>
                   <div className="divide-y divide-gray-50 dark:divide-slate-700 max-h-[500px] overflow-y-auto">
                     {dentistasFiltrados.length === 0 ? (
-                      <EmptyState icon={UserX} title="Nenhum dentista encontrado" />
+                      <EmptyState icon={UserX} title="Nenhum médico encontrado" />
                     ) : dentistasFiltrados.map((d) => (
                       <div key={d.id} className="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-slate-700/40 transition-colors">
                         <div className="flex items-center gap-3 min-w-0">
-                          <div className="w-9 h-9 rounded-full bg-orange-100 dark:bg-orange-950/40 text-[#FF8C00] flex items-center justify-center font-bold text-sm shrink-0">
+                          <div className="w-9 h-9 rounded-full bg-sky-100 dark:bg-sky-950/40 text-sky-500 flex items-center justify-center font-bold text-sm shrink-0">
                             {(d.nomeDentista || d.nome || '?').charAt(0)}
                           </div>
                           <div className="min-w-0">
                             <p className="font-bold text-gray-800 dark:text-white text-sm truncate">{d.nomeDentista || d.nome}</p>
                             <p className="text-xs text-gray-400 dark:text-slate-500 truncate">{d.email}</p>
-                            {d.cro && <p className="text-[11px] text-gray-400 dark:text-slate-500">CRO: {d.cro}</p>}
+                            {d.cro && <p className="text-[11px] text-gray-400 dark:text-slate-500">CRM: {d.cro}</p>}
                           </div>
                         </div>
                         <button onClick={() => deletarUsuario('dentistas', d.id, d.nomeDentista || d.nome || '')}
@@ -519,29 +486,29 @@ const dentistasFiltrados = dentistas.filter(d =>
         {telaAtiva === 'painel' && <>
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-gray-800 dark:text-white">Painel Administrativo</h2>
-          <p className="text-gray-500 dark:text-slate-400 mt-1">Visão geral da operação global da Turma do Bem.</p>
+          <p className="text-gray-500 dark:text-slate-400 mt-1">Visão geral da operação global OrbitalCare.</p>
         </div>
 
         <div className="mb-8">
-          <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2"><TrendingUp size={22} className="text-[#FF8C00]"/> Relatório de Impacto (2026)</h3>
+          <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center gap-2"><TrendingUp size={22} className="text-sky-500"/> Relatório de Impacto (2026)</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-gradient-to-br from-[#FF8C00] to-orange-600 p-6 rounded-2xl shadow-md text-white relative overflow-hidden group">
-              <Smile className="absolute -right-4 -bottom-4 text-white/20 group-hover:scale-110 transition-transform" size={100} />
-              <p className="text-orange-100 font-bold text-sm uppercase tracking-wider mb-1">Sorrisos Transformados</p>
-              <h4 className="text-4xl font-black">{sorrisosTransformados}</h4>
-              <p className="text-xs text-orange-200 mt-2">+12% este mês</p>
+            <div className="bg-gradient-to-br from-[#0EA5E9] to-sky-700 p-6 rounded-2xl shadow-md text-white relative overflow-hidden group">
+              <Video className="absolute -right-4 -bottom-4 text-white/20 group-hover:scale-110 transition-transform" size={100} />
+              <p className="text-sky-100 font-bold text-sm uppercase tracking-wider mb-1">Teleconsultas Realizadas</p>
+              <h4 className="text-4xl font-black">{consultasRealizadas}</h4>
+              <p className="text-xs text-sky-200 mt-2">+18% este mês</p>
             </div>
-            <div className="bg-gradient-to-br from-[#8dc63f] to-green-600 p-6 rounded-2xl shadow-md text-white relative overflow-hidden group">
-              <Clock className="absolute -right-4 -bottom-4 text-white/20 group-hover:scale-110 transition-transform" size={100} />
-              <p className="text-green-100 font-bold text-sm uppercase tracking-wider mb-1">Horas Clínicas Doadas</p>
-              <h4 className="text-4xl font-black">{horasDoadas}h</h4>
-              <p className="text-xs text-green-200 mt-2">Pelos Dentistas Voluntários</p>
+            <div className="bg-gradient-to-br from-emerald-500 to-emerald-700 p-6 rounded-2xl shadow-md text-white relative overflow-hidden group">
+              <Stethoscope className="absolute -right-4 -bottom-4 text-white/20 group-hover:scale-110 transition-transform" size={100} />
+              <p className="text-emerald-100 font-bold text-sm uppercase tracking-wider mb-1">Médicos Ativos</p>
+              <h4 className="text-4xl font-black">{statsAdmin.total_dentistas}</h4>
+              <p className="text-xs text-emerald-200 mt-2">Especialistas Conectados</p>
             </div>
             <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 p-6 rounded-2xl shadow-sm relative overflow-hidden group">
-              <DollarSign className="absolute -right-4 -bottom-4 text-gray-100 dark:text-slate-700 group-hover:scale-110 transition-transform" size={100} />
-              <p className="text-gray-500 dark:text-slate-400 font-bold text-sm uppercase tracking-wider mb-1">Economia Social Gerada</p>
-              <h4 className="text-3xl font-black text-[#FF8C00]">{economiaGerada}</h4>
-              <p className="text-xs text-gray-400 dark:text-slate-500 mt-2">Valor poupado pelas famílias</p>
+              <MapPin className="absolute -right-4 -bottom-4 text-gray-100 dark:text-slate-700 group-hover:scale-110 transition-transform" size={100} />
+              <p className="text-gray-500 dark:text-slate-400 font-bold text-sm uppercase tracking-wider mb-1">Regiões Atendidas</p>
+              <h4 className="text-3xl font-black text-sky-500">{regioesCovertas}</h4>
+              <p className="text-xs text-gray-400 dark:text-slate-500 mt-2">Municípios com cobertura satelital</p>
             </div>
           </div>
         </div>
@@ -549,24 +516,24 @@ const dentistasFiltrados = dentistas.filter(d =>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm flex items-center justify-between">
             <div>
-              <h3 className="text-gray-500 dark:text-slate-400 text-sm font-bold mb-1 uppercase tracking-widest">Jovens na Fila</h3>
+              <h3 className="text-gray-500 dark:text-slate-400 text-sm font-bold mb-1 uppercase tracking-widest">Pacientes em Espera</h3>
               <p className="text-5xl font-black text-gray-800 dark:text-white">{statsAdmin.total_beneficiarios}</p>
             </div>
-            <div className="p-4 bg-gray-50 dark:bg-slate-700 rounded-xl"><Users size={40} className="text-[#8dc63f]"/></div>
+            <div className="p-4 bg-gray-50 dark:bg-slate-700 rounded-xl"><Users size={40} className="text-sky-500"/></div>
           </div>
 
           <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm flex items-center justify-between">
             <div>
-              <h3 className="text-gray-500 dark:text-slate-400 text-sm font-bold mb-1 uppercase tracking-widest">Dentistas Voluntários</h3>
+              <h3 className="text-gray-500 dark:text-slate-400 text-sm font-bold mb-1 uppercase tracking-widest">Médicos Conectados</h3>
               <p className="text-5xl font-black text-gray-800 dark:text-white">{statsAdmin.total_dentistas}</p>
             </div>
-            <div className="p-4 bg-gray-50 dark:bg-slate-700 rounded-xl"><Heart size={40} className="text-[#FF8C00]"/></div>
+            <div className="p-4 bg-gray-50 dark:bg-slate-700 rounded-xl"><Stethoscope size={40} className="text-sky-500"/></div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
           <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-sm p-8 border border-gray-100 dark:border-slate-700 h-full flex flex-col">
-            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-2"><MapPin size={24} className="text-[#FF8C00]"/> Mapa de Calor (Demandas)</h3>
+            <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-2"><MapPin size={24} className="text-sky-500"/> Mapa de Calor — Demanda por Região</h3>
             <div className="flex-1 w-full rounded-2xl overflow-hidden border border-gray-200 dark:border-slate-600 relative" style={{ minHeight: '380px' }}>
               <MapContainer
                 center={[-15.0, -60.0]}
@@ -584,18 +551,17 @@ const dentistasFiltrados = dentistas.filter(d =>
                 {heatPoints.length > 0 && <HeatmapLayer points={heatPoints} />}
                 <CityMarkers porCidade={porCidadeNormalizado} coordsMap={allCoords} />
               </MapContainer>
-              {/* Legenda do mapa */}
               <div className="absolute bottom-3 left-3 z-[1000] bg-black/70 backdrop-blur-sm rounded-xl px-3 py-2 flex items-center gap-2 pointer-events-none">
-                <div className="w-24 h-3 rounded-full" style={{ background: 'linear-gradient(to right, #4338ca, #8b5cf6, #f97316, #dc2626)' }} />
+                <div className="w-24 h-3 rounded-full" style={{ background: 'linear-gradient(to right, #0369a1, #0ea5e9, #f97316, #dc2626)' }} />
                 <span className="text-white text-[10px] font-bold whitespace-nowrap">Baixa → Alta demanda</span>
               </div>
             </div>
-            <p className="text-xs text-gray-400 dark:text-slate-500 mt-4 text-center font-medium">Zonas quentes indicam maior concentração de jovens na fila. Passe o mouse sobre os pontos para ver detalhes.</p>
+            <p className="text-xs text-gray-400 dark:text-slate-500 mt-4 text-center font-medium">Zonas quentes indicam maior concentração de pacientes aguardando atendimento. Passe o mouse sobre os pontos para ver detalhes.</p>
           </div>
 
           <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-sm p-8 border border-gray-100 dark:border-slate-700 h-full">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2"><CalendarDays size={24} className="text-[#8dc63f]"/> Agenda da Rede</h3>
+              <h3 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2"><CalendarDays size={24} className="text-sky-500"/> Agenda da Rede</h3>
               <BotoesExportar
                 onPDF={() => exportarAtendimentosPDF(statsAdmin.ultimos_agendamentos)}
                 onCSV={() => exportarAtendimentosCSV(statsAdmin.ultimos_agendamentos)}
@@ -603,15 +569,15 @@ const dentistasFiltrados = dentistas.filter(d =>
             </div>
             <div className="space-y-4">
               {statsAdmin.ultimos_agendamentos && statsAdmin.ultimos_agendamentos.map((ag: AgendamentoAdmin, index: number) => (
-                <div key={index} className="p-5 rounded-2xl border border-gray-100 dark:border-slate-700 dark:bg-slate-700/50 shadow-sm hover:border-orange-200 dark:hover:border-orange-700/60 transition-colors flex flex-col gap-2">
+                <div key={index} className="p-5 rounded-2xl border border-gray-100 dark:border-slate-700 dark:bg-slate-700/50 shadow-sm hover:border-sky-200 dark:hover:border-sky-700/60 transition-colors flex flex-col gap-2">
                   <div className="flex justify-between items-start">
                     <p className="font-bold text-gray-800 dark:text-white text-lg">{ag.paciente}</p>
-                    <span className={`text-[10px] font-bold uppercase px-3 py-1 rounded-md ${ag.prioridade === 'Urgente' ? 'bg-red-100 text-red-600 dark:bg-red-950/40 dark:text-red-400' : ag.prioridade === 'Alta' ? 'bg-orange-100 text-orange-600 dark:bg-orange-950/40 dark:text-orange-400' : 'bg-green-100 text-green-600 dark:bg-green-950/40 dark:text-green-400'}`}>{ag.prioridade}</span>
+                    <span className={`text-[10px] font-bold uppercase px-3 py-1 rounded-md ${ag.prioridade === 'Urgente' ? 'bg-red-100 text-red-600 dark:bg-red-950/40 dark:text-red-400' : ag.prioridade === 'Alta' ? 'bg-sky-100 text-sky-600 dark:bg-sky-950/40 dark:text-sky-400' : 'bg-green-100 text-green-600 dark:bg-green-950/40 dark:text-green-400'}`}>{ag.prioridade}</span>
                   </div>
-                  <p className="text-sm text-gray-500 dark:text-slate-400 font-medium">{ag.proc} com <strong className="text-gray-700 dark:text-slate-200">{ag.dentista}</strong></p>
+                  <p className="text-sm text-gray-500 dark:text-slate-400 font-medium">{ag.proc} — Dr(a). <strong className="text-gray-700 dark:text-slate-200">{ag.dentista}</strong></p>
                   <div className="flex flex-wrap items-center gap-3 mt-2">
                     <span className="text-xs font-bold text-gray-600 dark:text-slate-300 flex items-center gap-1 bg-gray-50 dark:bg-slate-700 px-2.5 py-1.5 rounded-lg"><CalendarDays size={14}/> {ag.data}</span>
-                    <span className="text-xs font-bold text-[#FF8C00] flex items-center gap-1 bg-orange-50 dark:bg-orange-950/30 px-2.5 py-1.5 rounded-lg"><Clock size={14}/> {ag.hora}</span>
+                    <span className="text-xs font-bold text-sky-500 flex items-center gap-1 bg-sky-50 dark:bg-sky-950/30 px-2.5 py-1.5 rounded-lg"><Clock size={14}/> {ag.hora}</span>
                     <span className="text-xs font-bold text-gray-600 dark:text-slate-300 flex items-center gap-1 bg-gray-50 dark:bg-slate-700 px-2.5 py-1.5 rounded-lg"><MapPin size={14}/> {ag.cidade}</span>
                   </div>
                 </div>
@@ -619,7 +585,7 @@ const dentistasFiltrados = dentistas.filter(d =>
               {(!statsAdmin.ultimos_agendamentos || statsAdmin.ultimos_agendamentos.length === 0) && (
                 <EmptyState
                   icon={CalendarDays}
-                  title="Sem atendimentos previstos"
+                  title="Sem teleconsultas previstas"
                   description="Os próximos agendamentos da rede aparecerão aqui."
                 />
               )}
@@ -637,13 +603,13 @@ const dentistasFiltrados = dentistas.filter(d =>
               key={item.id}
               onClick={() => { setTelaAtiva(item.id); if (item.id === 'usuarios') setCarregandoUsuarios(true); }}
               className={`flex-1 flex flex-col items-center gap-1 py-3 px-1 transition-colors ${
-                telaAtiva === item.id ? 'text-orange-500' : 'text-slate-400'
+                telaAtiva === item.id ? 'text-sky-500' : 'text-slate-400'
               }`}
             >
               <span className="relative">
                 {item.icon}
                 {item.badge > 0 && (
-                  <span className="absolute -top-1.5 -right-2.5 w-4 h-4 bg-orange-500 text-white text-[9px] font-black rounded-full flex items-center justify-center leading-none">
+                  <span className="absolute -top-1.5 -right-2.5 w-4 h-4 bg-sky-500 text-white text-[9px] font-black rounded-full flex items-center justify-center leading-none">
                     {item.badge > 9 ? '9+' : item.badge}
                   </span>
                 )}

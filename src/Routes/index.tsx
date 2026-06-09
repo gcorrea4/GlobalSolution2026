@@ -12,7 +12,7 @@ import { Formulario } from '../pages/Formulario';
 import { Cadastro } from '../pages/Cadastro';
 import { Login } from '../pages/Login';
 import { AdminDashboard } from '../pages/AdminDashboard';
-import { DentistaDashboard } from '../pages/DentistaDashboard';
+import { MedicoDashboard } from '../pages/MedicoDashboard';
 import { PacienteDashboard } from '../pages/PacienteDashboard';
 import { CalculadoraScore } from '../pages/CalculadoraScore';
 import { FormularioContato } from '../pages/FormularioContato';
@@ -66,7 +66,7 @@ export function AppRoutes() {
 
         {/* ── Dashboards protegidos — sem Header/Footer ── */}
         <Route path="/dashboard/admin"    element={<ProtectedRoute allowedRoles={['admin', 'dev']}><AdminDashboard /></ProtectedRoute>} />
-        <Route path="/dashboard/medico"   element={<ProtectedRoute allowedRoles={['medico', 'dev']}><DentistaDashboard /></ProtectedRoute>} />
+        <Route path="/dashboard/medico"   element={<ProtectedRoute allowedRoles={['medico', 'dev']}><MedicoDashboard /></ProtectedRoute>} />
         <Route path="/dashboard/paciente" element={<ProtectedRoute allowedRoles={['paciente']}><PacienteDashboard /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
