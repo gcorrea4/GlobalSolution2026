@@ -192,7 +192,7 @@ export function MedicoDashboard() {
   useEffect(() => {
     const idNum = Number(medicoId);
     if (!idNum) { setCarregandoMeusPacientes(false); return; }
-    apiFetch(`/pacientes/adotados?idMedico=${idNum}`)
+    apiFetch(`/pacientes/atendidos?idMedico=${idNum}`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) setMeusPacientes(data.map(mapearPaciente));
@@ -254,7 +254,7 @@ export function MedicoDashboard() {
         .catch(() => {});
       const idNum = Number(medicoId);
       if (idNum) {
-        apiFetch(`/pacientes/adotados?idMedico=${idNum}`)
+        apiFetch(`/pacientes/atendidos?idMedico=${idNum}`)
           .then(r => r.json())
           .then(data => { if (Array.isArray(data)) setMeusPacientes(data.map(mapearPaciente)); })
           .catch(() => {});
