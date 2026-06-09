@@ -34,7 +34,7 @@ export function Prontuario() {
           </h3>
           <p className="text-sm text-gray-600 dark:text-slate-300 leading-relaxed">
             Dados carregados dinamicamente para o paciente <strong>{nome}</strong>.
-            Este ecrã utiliza parâmetros de rota para identificar o beneficiário no banco de dados Java/DDD.
+            Esta tela utiliza parâmetros de rota para identificar o beneficiário no banco de dados Java/DDD.
           </p>
         </div>
       </div>
