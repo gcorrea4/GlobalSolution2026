@@ -27,7 +27,7 @@ const integrantes: Integrante[] = [
     papel: 'Frontend & IA',
   },
   {
-    nome: 'Eric',
+    nome: 'Eric Maciel Martins',
     foto: fotoEric,
     objectPosition: 'center 18%',
     rm: 'RM567398',
@@ -37,7 +37,7 @@ const integrantes: Integrante[] = [
     papel: 'Python & Banco de Dados',
   },
   {
-    nome: 'Kay',
+    nome: 'Kayque Duarte',
     foto: fotoKay,
     objectPosition: 'center 25%',
     rm: 'RM567980',
