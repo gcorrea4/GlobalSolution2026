@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { apiFetch } from '../utils/api';
 import {
   LayoutDashboard, Users, LogOut, MapPin, Stethoscope, CalendarDays, Clock,
-  TrendingUp, Video, Archive, AlertTriangle, CheckCircle2, Search, UserX,
+   Video, Archive, AlertTriangle, CheckCircle2, Search, UserX,
   FileDown, Sheet, Database, Menu, Satellite, X,
 } from 'lucide-react';
 import { MetricasOperacionais } from './MetricasOperacionais';
