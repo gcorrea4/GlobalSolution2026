@@ -111,7 +111,7 @@ export function Integrantes() {
               </div>
 
               {/* Info compacta */}
-              <div className="px-4 py-3 flex items-center justify-between gap-3">
+              <div className="px-5 py-3 flex items-center justify-between gap-3">
                 <div className="min-w-0">
                   <h3 className="text-sm font-black text-gray-900 dark:text-white leading-tight truncate">
                     {integrante.nome}
