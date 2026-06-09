@@ -25,7 +25,7 @@ A aplicação foi desenvolvida em **React + Vite + TypeScript** com integração
 |---|---|
 | 🌐 **Aplicação online (Vercel)** | https://global-solution2026.vercel.app/ |
 | 💻 **Repositório GitHub (Front-End)** | https://github.com/gcorrea4/GlobalSolution2026 |
-| 🎥 **Vídeo de apresentação (YouTube)** | _em breve_ |
+| 🎥 **Vídeo de apresentação (YouTube)** | https://youtu.be/iEcwR9XBZ88 |
 | ⚙️ **API Java (Azure)** | https://app-orbitalcare-api.azurewebsites.net |
 | 📋 **Swagger UI** | https://app-orbitalcare-api.azurewebsites.net/q/swagger-ui |
 
