@@ -24,19 +24,34 @@ A aplicação foi desenvolvida em **React + Vite + TypeScript** com integração
 | Recurso | Link |
 |---|---|
 | 🌐 **Aplicação online (Vercel)** | https://global-solution2026.vercel.app/ |
-| 💻 **Repositório GitHub (Front-End)** | _em breve_ |
+| 💻 **Repositório GitHub (Front-End)** | https://github.com/gcorrea4/GlobalSolution2026 |
 | 🎥 **Vídeo de apresentação (YouTube)** | _em breve_ |
 | ⚙️ **API Java (Azure)** | https://app-orbitalcare-api.azurewebsites.net |
 | 📋 **Swagger UI** | https://app-orbitalcare-api.azurewebsites.net/q/swagger-ui |
 
-### Executar localmente
+---
+
+## 🔑 Credenciais de Acesso para Avaliação
+
+| Perfil | E-mail | Senha |
+|---|---|---|
+| 👑 **Administrador** | admin@orbitalcare.com | 123456 |
+| 👨‍⚕️ **Médico** | carlos@orbitalcare.com | 123456 |
+| 👤 **Paciente** | maria@email.com | 123456 |
+
+> Outros médicos disponíveis: `ana@orbitalcare.com` e `joao@orbitalcare.com` (senha: 123456)
+> Outros pacientes: `jose@email.com`, `analima@email.com`, `pedro@email.com`, `lucia@email.com` (senha: 123456)
+
+---
+
+## 🖥️ Executar localmente
 
 **Pré-requisito:** [Node.js](https://nodejs.org/) 18+ instalado.
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/gcorrea4/global-solution-2026.git
-cd global-solution-2026
+git clone https://github.com/gcorrea4/GlobalSolution2026.git
+cd GlobalSolution2026
 
 # 2. Instale as dependências
 npm install
@@ -83,7 +98,7 @@ npm run check       # tsc + eslint + vitest (pipeline completa)
 | **Linting** | ESLint 9 + typescript-eslint |
 | **Deploy Front-End** | Vercel |
 | **Deploy Back-End** | Azure App Service (container Docker) |
-| **Banco de Dados** | Oracle (FIAP) |
+| **Banco de Dados** | Oracle (FIAP) — schema T_OC_ |
 | **Versionamento** | Git + GitHub |
 
 ---
@@ -94,7 +109,7 @@ npm run check       # tsc + eslint + vitest (pipeline completa)
 - 📋 **Cadastro de pacientes** com seleção de especialidade necessária, descrição de sintomas e nível de urgência.
 - 🏥 **Triagem inteligente** — algoritmo que prioriza pacientes por urgência clínica e especialidade necessária.
 - 🗺️ **Mapa interativo (Leaflet)** com heatmap de pacientes por região e cobertura satelital.
-- 📊 **Dashboard Admin** com métricas operacionais, exportação de relatórios em PDF e CSV.
+- 📊 **Dashboard Admin** com métricas operacionais, listagem de médicos e pacientes, exportação de relatórios em PDF e CSV.
 - 👨‍⚕️ **Dashboard Médico** — fila priorizada, aceitação de pacientes, teleconsultas e prontuário.
 - 👤 **Dashboard Paciente** — acompanhamento de status, histórico de consultas e prontuário individual.
 - 📁 **Prontuário dinâmico** via rota com parâmetro (`/prontuario/:nome`).
@@ -108,7 +123,7 @@ npm run check       # tsc + eslint + vitest (pipeline completa)
 ## 📁 Estrutura de Pastas do Projeto
 
 ```text
-global-solution-2026/
+GlobalSolution2026/
 ├── public/                         # Assets estáticos
 ├── src/
 │   ├── components/                 # Componentes reutilizáveis
@@ -169,30 +184,31 @@ A aplicação consome a API REST desenvolvida na disciplina **Domain Driven Desi
 |---|---|---|
 | `POST` | `/login` | Autenticação de usuário |
 | `POST` | `/pacientes` | Cadastro de paciente |
+| `POST` | `/medicos` | Cadastro de médico |
 | `POST` | `/ofertas` | Aceitação de paciente pelo médico |
 | `POST` | `/pacientes/redefinir-senha` | Redefinição de senha |
 | `GET` | `/pacientes` | Lista pacientes por filtros |
 | `GET` | `/medicos` | Lista médicos disponíveis |
 | `GET` | `/pacientes/atendidos?idMedico=...` | Lista pacientes atendidos pelo médico |
 | `GET` | `/ofertas/medico/:id` | Histórico de ofertas do médico |
+| `GET` | `/admin/estatisticas` | Métricas operacionais (admin) |
 | `PUT` | `/pacientes/:id` | Atualização de dados do paciente |
 | `PUT` | `/pacientes/:id/status` | Atualização de status do ticket |
 | `PATCH` | `/ofertas/:id/concluir` | Conclusão de teleconsulta |
-| `GET` | `/admin/metricas` | Métricas operacionais (admin) |
+| `DELETE` | `/pacientes/:id` | Remoção de paciente (soft delete) |
+| `DELETE` | `/medicos/:id` | Remoção de médico (soft delete) |
 
 ---
 
 ## 🖼️ Imagens e Screenshots
 
-<!-- Adicionar prints após tirar as fotos -->
-
 **Desktop:**
 
-_em breve_
+<img src="src/img/desktop.png>
 
 **Mobile:**
 
-_em breve_
+<img src="src/img/mobile.png>
 
 ---
 
