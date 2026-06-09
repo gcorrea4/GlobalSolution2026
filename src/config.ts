@@ -14,6 +14,6 @@
  * Windows \u00E0s vezes inserem no in\u00EDcio de arquivos .env, evitando erros
  * silenciosos de URL como "\uFEFFhttps://..." que o fetch n\u00E3o reconhece.
  */
-export const API_URL = (import.meta.env.VITE_API_URL || 'https://challengesprint-api.azurewebsites.net')
+export const API_URL = (import.meta.env.VITE_API_URL || 'https://app-orbitalcare-api.azurewebsites.net')
   .replace(/^\uFEFF/, '') // remove BOM do Windows
   .trim();
