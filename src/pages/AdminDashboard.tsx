@@ -147,7 +147,7 @@ export function AdminDashboard() {
   const [tipoMensagemAdmin, setTipoMensagemAdmin] = useState<'sucesso' | 'erro'>('sucesso');
   const [filtroStatus, setFiltroStatus] = useState<TicketStatus | null>(null);
   const [confirmacaoPendente, setConfirmacaoPendente] = useState<{
-    tipo: 'pacientes' | 'dentistas';
+    tipo: 'pacientes' | 'medicos';
     id: number;
     nome: string;
   } | null>(null);
@@ -187,7 +187,7 @@ export function AdminDashboard() {
           return arr as UsuarioPaciente[];
         })
         .catch((): UsuarioPaciente[] => []),
-      apiFetch('/dentistas').then(r => r.json()).catch((): UsuarioDentista[] => []),
+      apiFetch('/medicos').then(r => r.json()).catch((): UsuarioDentista[] => []),
     ]);
 
   useEffect(() => {
@@ -222,7 +222,7 @@ export function AdminDashboard() {
     return () => clearInterval(id);
   }, []);
 
-  const deletarUsuario = (tipo: 'pacientes' | 'dentistas', id: number, nome: string) => {
+  const deletarUsuario = (tipo: 'pacientes' | 'medicos', id: number, nome: string) => {
     setConfirmacaoPendente({ tipo, id, nome });
   };
 
@@ -611,7 +611,7 @@ export function AdminDashboard() {
                               </span>
                             </td>
                             <td className="px-4 py-3 text-right">
-                              <button onClick={() => deletarUsuario('dentistas', d.id, d.nomeDentista || d.nome || '')}
+                              <button onClick={() => deletarUsuario('medicos', d.id, d.nomeDentista || d.nome || '')}
                                 className="p-1.5 rounded-lg text-slate-500 hover:text-amber-400 hover:bg-amber-500/10 transition-colors" title="Inativar conta">
                                 <Archive size={15} />
                               </button>

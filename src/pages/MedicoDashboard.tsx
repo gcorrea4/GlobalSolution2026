@@ -192,7 +192,7 @@ export function MedicoDashboard() {
   useEffect(() => {
     const idNum = Number(medicoId);
     if (!idNum) { setCarregandoMeusPacientes(false); return; }
-    apiFetch(`/pacientes/adotados?idDentista=${idNum}`)
+    apiFetch(`/pacientes/adotados?idMedico=${idNum}`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) setMeusPacientes(data.map(mapearPaciente));
@@ -204,7 +204,7 @@ export function MedicoDashboard() {
   useEffect(() => {
     const idMedico = sessionStorage.getItem('userId');
     if (!idMedico) return;
-    apiFetch(`/ofertas/dentista/${idMedico}`)
+    apiFetch(`/ofertas/medico/${idMedico}`)
       .then(res => res.json())
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .then((ofertas: any[]) => {
@@ -254,7 +254,7 @@ export function MedicoDashboard() {
         .catch(() => {});
       const idNum = Number(medicoId);
       if (idNum) {
-        apiFetch(`/pacientes/adotados?idDentista=${idNum}`)
+        apiFetch(`/pacientes/adotados?idMedico=${idNum}`)
           .then(r => r.json())
           .then(data => { if (Array.isArray(data)) setMeusPacientes(data.map(mapearPaciente)); })
           .catch(() => {});
@@ -297,7 +297,7 @@ export function MedicoDashboard() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          idDentista: Number(medicoId), idPaciente: fichaAtiva.id,
+          idMedico: Number(medicoId), idPaciente: fichaAtiva.id,
           procedimento: procedimentoOferta,
           slots: slotsLivres.map(s => ({ data: s.data, hora: s.hora })),
         }),
@@ -329,7 +329,7 @@ export function MedicoDashboard() {
           rendaSalarioMinimo: paciente.renda || 0,
           telefone: paciente.telefone,
           status: acao,
-          ...(acao === 'adotado' ? { idDentistaResponsavel: idNum } : {}),
+          ...(acao === 'adotado' ? { idMedicoResponsavel: idNum } : {}),
         }),
       });
       if (!res.ok) {

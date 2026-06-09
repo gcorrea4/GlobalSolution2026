@@ -180,7 +180,7 @@ export function DentistaDashboard() {
   useEffect(() => {
     const idNum = Number(dentistId);
     if (!idNum) { setCarregandoMeusPacientes(false); return; }
-    apiFetch(`/pacientes/adotados?idDentista=${idNum}`)
+    apiFetch(`/pacientes/adotados?idMedico=${idNum}`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) setMeusPacientes(data.map(mapearPaciente));
@@ -193,7 +193,7 @@ export function DentistaDashboard() {
   useEffect(() => {
     const idDentista = sessionStorage.getItem('userId');
     if (!idDentista) return;
-    apiFetch(`/ofertas/dentista/${idDentista}`)
+    apiFetch(`/ofertas/medico/${idDentista}`)
       .then(res => res.json())
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .then((ofertas: any[]) => {
@@ -245,7 +245,7 @@ export function DentistaDashboard() {
         .catch(() => {});
       const idNum = Number(dentistId);
       if (idNum) {
-        apiFetch(`/pacientes/adotados?idDentista=${idNum}`)
+        apiFetch(`/pacientes/adotados?idMedico=${idNum}`)
           .then(r => r.json())
           .then(data => { if (Array.isArray(data)) setMeusPacientes(data.map(mapearPaciente)); })
           .catch(() => {});
@@ -288,7 +288,7 @@ export function DentistaDashboard() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          idDentista: Number(dentistId), idPaciente: fichaAtiva.id,
+          idMedico: Number(dentistId), idPaciente: fichaAtiva.id,
           procedimento: procedimentoOferta,
           slots: slotsLivres.map(s => ({ data: s.data, hora: s.hora })),
         }),
@@ -325,7 +325,7 @@ export function DentistaDashboard() {
           rendaSalarioMinimo: paciente.renda || 0,
           telefone: paciente.telefone,
           status: acao,
-          ...(acao === 'adotado' ? { idDentistaResponsavel: idNum } : {}),
+          ...(acao === 'adotado' ? { idMedicoResponsavel: idNum } : {}),
         }),
       });
       if (!res.ok) {

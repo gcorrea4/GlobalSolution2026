@@ -104,7 +104,7 @@ export function Cadastro() {
     const cidadeFinal = cidadeValida || cidadeInput;
     setMensagem({ texto: 'Processando registro...', tipo: 'sucesso' });
     try {
-      const url = data.tipo === 'paciente' ? `${API_URL}/pacientes` : `${API_URL}/dentistas`;
+      const url = data.tipo === 'paciente' ? `${API_URL}/pacientes` : `${API_URL}/medicos`;
       const nomeEstado = estadosPais.find(e => e.sigla === estadoSelecionado)?.nome || estadoSelecionado;
       const payload = data.tipo === 'paciente' ? {
         nome: data.nome, email: data.email, senha: data.senha,
