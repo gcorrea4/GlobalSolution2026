@@ -275,7 +275,7 @@ export function PacienteDashboard() {
           ))}
 
           <button
-            onClick={() => { setSidebarOpen(false); navigate(`/prontuario/${usuarioLogado}`); }}
+            onClick={() => { setSidebarOpen(false); navigate(`/prontuario/${userId}`); }}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800 border border-transparent transition-colors"
           >
             <FileText size={18} className="flex-shrink-0" />

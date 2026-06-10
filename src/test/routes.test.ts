@@ -33,7 +33,7 @@ describe('Routes/index.tsx — rotas essenciais presentes', () => {
     '/dashboard/medico',
     '/dashboard/paciente',
     '/Calculadora/Score',
-    '/prontuario/:nome',
+    '/prontuario/:id',
   ];
 
   rotasEssenciais.forEach((rota) => {

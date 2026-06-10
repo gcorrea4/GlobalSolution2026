@@ -57,7 +57,7 @@ export function AppRoutes() {
           <Route path="/login"             element={<Login />} />
           <Route path="/Calculadora/Score" element={<CalculadoraScore />} />
           <Route path="/FormularioContato" element={<FormularioContato />} />
-          <Route path="/prontuario/:nome"  element={<Prontuario />} />
+          <Route path="/prontuario/:id"    element={<Prontuario />} />
 
           {/* ── Catch-all 404 (mantém Header/Footer) ── */}
           <Route path="*"                  element={<NotFound />} />

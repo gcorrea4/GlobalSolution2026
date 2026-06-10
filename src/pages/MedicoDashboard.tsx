@@ -574,7 +574,7 @@ export function MedicoDashboard() {
                                     </div>
                                     <div>
                                       <button className="font-semibold text-white text-sm hover:text-sky-400 transition-colors text-left"
-                                        onClick={() => navigate(`/prontuario/${p.nome}`)}>
+                                        onClick={() => navigate(`/prontuario/${p.id}`)}>
                                         {p.nome}
                                       </button>
                                       <p className="text-xs text-slate-500">{p.idade} anos · {p.cidade}</p>
