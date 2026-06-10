@@ -154,7 +154,7 @@ export function AdminDashboard() {
 
   const [statsAdmin, setStatsAdmin] = useState({
     total_beneficiarios: 0,
-    total_dentistas: 0,
+    total_medicos: 0,
     por_cidade: {} as Record<string, number>,
     ultimos_agendamentos: [] as AgendamentoAdmin[],
     coordenadas: {} as Record<string, [number, number]>,
@@ -165,14 +165,14 @@ export function AdminDashboard() {
       .then(res => { if (!res.ok) throw new Error(); return res.json(); })
       .then(data => setStatsAdmin({
         total_beneficiarios: data.total_beneficiarios || 0,
-        total_dentistas: data.total_dentistas || 0,
+        total_medicos: data.total_medicos || 0,
         por_cidade: data.por_cidade || {},
         ultimos_agendamentos: data.ultimos_agendamentos || [],
         coordenadas: data.coordenadas || {},
       }))
       .catch(err => {
         console.error('Erro ao carregar estatísticas do painel admin:', err);
-        setStatsAdmin({ total_beneficiarios: 0, total_dentistas: 0, por_cidade: {}, ultimos_agendamentos: [], coordenadas: {} });
+        setStatsAdmin({ total_beneficiarios: 0, total_medicos: 0, por_cidade: {}, ultimos_agendamentos: [], coordenadas: {} });
         setMensagemAdmin('Não foi possível carregar as estatísticas do painel.');
         setTimeout(() => setMensagemAdmin(''), 4000);
       });
@@ -427,7 +427,7 @@ export function AdminDashboard() {
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
                 {([
                   { label: 'Total de Pacientes',    value: statsAdmin.total_beneficiarios, icon: <Users size={20} />,       accent: 'border-l-sky-500' },
-                  { label: 'Médicos Ativos',         value: statsAdmin.total_dentistas,    icon: <Stethoscope size={20} />, accent: 'border-l-emerald-500' },
+                  { label: 'Médicos Ativos',         value: statsAdmin.total_medicos,      icon: <Stethoscope size={20} />, accent: 'border-l-emerald-500' },
                   { label: 'Consultas Realizadas',   value: consultasRealizadas,           icon: <Video size={20} />,       accent: 'border-l-sky-500' },
                   { label: 'Regiões Cobertas',       value: regioesCovertas,               icon: <MapPin size={20} />,      accent: 'border-l-emerald-500' },
                 ] as const).map(card => (
