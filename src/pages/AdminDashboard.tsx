@@ -170,7 +170,12 @@ export function AdminDashboard() {
         ultimos_agendamentos: data.ultimos_agendamentos || [],
         coordenadas: data.coordenadas || {},
       }))
-      .catch(() => setStatsAdmin({ total_beneficiarios: 0, total_dentistas: 0, por_cidade: {}, ultimos_agendamentos: [], coordenadas: {} }));
+      .catch(err => {
+        console.error('Erro ao carregar estatísticas do painel admin:', err);
+        setStatsAdmin({ total_beneficiarios: 0, total_dentistas: 0, por_cidade: {}, ultimos_agendamentos: [], coordenadas: {} });
+        setMensagemAdmin('Não foi possível carregar as estatísticas do painel.');
+        setTimeout(() => setMensagemAdmin(''), 4000);
+      });
   }, []);
 
   const fetchTodos = () =>
@@ -183,11 +188,22 @@ export function AdminDashboard() {
             : d && typeof d === 'object'
               ? (Object.values(d as Record<string, unknown>).find(Array.isArray) ?? [])
               : [];
-          console.log('[ADMIN] /pacientes raw shape:', typeof d, Array.isArray(d) ? 'array' : JSON.stringify(d).slice(0, 120), '→ arr.length:', (arr as unknown[]).length);
           return arr as UsuarioPaciente[];
         })
-        .catch((): UsuarioPaciente[] => []),
-      apiFetch('/medicos').then(r => r.json()).catch((): UsuarioDentista[] => []),
+        .catch((err): UsuarioPaciente[] => {
+          console.error('Erro ao carregar lista de pacientes (admin):', err);
+          setMensagemAdmin('Não foi possível carregar a lista de usuários.');
+          setTimeout(() => setMensagemAdmin(''), 4000);
+          return [];
+        }),
+      apiFetch('/medicos')
+        .then(r => r.json())
+        .catch((err): UsuarioDentista[] => {
+          console.error('Erro ao carregar lista de médicos (admin):', err);
+          setMensagemAdmin('Não foi possível carregar a lista de usuários.');
+          setTimeout(() => setMensagemAdmin(''), 4000);
+          return [];
+        }),
     ]);
 
   useEffect(() => {
@@ -295,11 +311,6 @@ export function AdminDashboard() {
     (d.nomeDentista || d.nome || '').toLowerCase().includes(filtroBusca.toLowerCase()) ||
     (d.email || '').toLowerCase().includes(filtroBusca.toLowerCase())
   );
-
-  useEffect(() => {
-    const filtrados = pacientes.filter(p => filtroStatus === null || p.statusTicket === filtroStatus);
-    console.log('[ADMIN] pacientes recebidos:', pacientes.length, 'filtrados:', filtrados.length, 'filtro:', filtroStatus);
-  }, [pacientes, filtroStatus]);
 
   const navItems = [
     { id: 'painel' as const,    icon: <LayoutDashboard size={18} />, label: 'Visão Geral',     badge: 0 },

@@ -11,6 +11,7 @@ import { Skeleton, EmptyState, DemoBadge } from '../components/ui';
 import { TicketBadge, TicketNumero, TicketTimeline } from '../components/ticket';
 import { pacientesApi } from '../lib/api';
 import type { EventoHistorico, TicketStatus } from '../lib/api';
+import { useToast } from '../hooks/useToast';
 
 interface HistoricoConsulta {
   id?: number;
@@ -57,6 +58,7 @@ type TelaPaciente = 'painel' | 'triagem' | 'consultas';
 
 export function PacienteDashboard() {
   const navigate = useNavigate();
+  const { mostrar, ToastNode } = useToast();
   const usuarioLogado = sessionStorage.getItem('usuarioLogado');
   const userId = sessionStorage.getItem('userId');
 
@@ -92,17 +94,23 @@ export function PacienteDashboard() {
     const fetchInfo = apiFetch(`/pacientes/${userId}`)
       .then(res => res.json())
       .then(data => { if (data?.cidade) setPacienteInfo({ cidade: data.cidade, pais: data.pais || 'Brasil' }); })
-      .catch(() => {});
+      .catch(err => { console.error('Erro ao carregar dados do paciente:', err); throw err; });
     const fetchHistorico = apiFetch(`/pacientes/${userId}/historico`)
       .then(res => res.json())
       .then(data => { if (Array.isArray(data)) setHistoricoPaciente(data); })
-      .catch(() => {});
+      .catch(err => { console.error('Erro ao carregar histórico de consultas:', err); throw err; });
     const fetchOferta = apiFetch(`/ofertas/paciente/${userId}`)
       .then(res => res.json())
       .then(data => { setOfertaRecebida(data && data.id ? (data as OfertaAgendamento) : null); })
-      .catch(() => {});
-    Promise.allSettled([fetchInfo, fetchHistorico, fetchOferta]).finally(() => setCarregandoDados(false));
-  }, [userId]);
+      .catch(err => { console.error('Erro ao carregar ofertas de consulta:', err); throw err; });
+    Promise.allSettled([fetchInfo, fetchHistorico, fetchOferta])
+      .then(resultados => {
+        if (resultados.some(r => r.status === 'rejected')) {
+          mostrar('Não foi possível carregar alguns dados do seu painel. Tente novamente.', 'erro');
+        }
+      })
+      .finally(() => setCarregandoDados(false));
+  }, [userId, mostrar]);
 
   useEffect(() => {
     if (!userId) { setCarregandoHistorico(false); return; }
@@ -118,17 +126,23 @@ export function PacienteDashboard() {
         }
         if (novoStatus) sessionStorage.setItem(`orb_status_${userId}`, novoStatus);
       })
-      .catch(() => {})
+      .catch(err => {
+        console.error('Erro ao carregar histórico do caso:', err);
+        mostrar('Não foi possível carregar o histórico do seu caso.', 'erro');
+      })
       .finally(() => setCarregandoHistorico(false));
-  }, [userId]);
+  }, [userId, mostrar]);
 
   useEffect(() => {
     if (telaAtiva !== 'consultas' || !userId) return;
     apiFetch(`/ofertas/paciente/${userId}`)
       .then(res => res.json())
       .then(data => { setOfertaRecebida(data && data.id ? (data as OfertaAgendamento) : null); })
-      .catch(() => {});
-  }, [telaAtiva, userId]);
+      .catch(err => {
+        console.error('Erro ao atualizar ofertas de consulta:', err);
+        mostrar('Não foi possível atualizar suas consultas.', 'erro');
+      });
+  }, [telaAtiva, userId, mostrar]);
 
   const handleLogout = () => { sessionStorage.clear(); navigate('/login'); };
 
@@ -237,6 +251,7 @@ export function PacienteDashboard() {
   return (
     <div className="flex h-screen bg-slate-950 font-sans overflow-hidden">
       <title>Meu Caso · OrbitalCare</title>
+      {ToastNode}
 
       {/* Mobile overlay */}
       {sidebarOpen && (

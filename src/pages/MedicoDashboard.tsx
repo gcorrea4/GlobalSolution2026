@@ -231,7 +231,10 @@ export function MedicoDashboard() {
         setOfertasMapa(mapa);
         setAgendamentos(agendados);
       })
-      .catch(() => {});
+      .catch(err => {
+        console.error('Erro ao carregar ofertas/agendamentos do mapa:', err);
+        showMensagem('Não foi possível carregar os agendamentos. Tente novamente.');
+      });
   }, [usuarioLogado, cidadeAtiva]);
 
   useEffect(() => {
@@ -251,13 +254,19 @@ export function MedicoDashboard() {
       apiFetch(`/pacientes?cidade=${cidadeAtiva}`)
         .then(r => r.json())
         .then(data => { if (Array.isArray(data)) setPacientes(data.map(mapearPaciente)); })
-        .catch(() => {});
+        .catch(err => {
+          console.error('Erro ao atualizar fila de pacientes ao retomar a aba:', err);
+          showMensagem('Não foi possível atualizar a fila de pacientes.');
+        });
       const idNum = Number(medicoId);
       if (idNum) {
         apiFetch(`/pacientes/atendidos?idMedico=${idNum}`)
           .then(r => r.json())
           .then(data => { if (Array.isArray(data)) setMeusPacientes(data.map(mapearPaciente)); })
-          .catch(() => {});
+          .catch(err => {
+            console.error('Erro ao atualizar pacientes atendidos ao retomar a aba:', err);
+            showMensagem('Não foi possível atualizar seus pacientes.');
+          });
       }
     };
     document.addEventListener('visibilitychange', onVisibilityChange);
@@ -342,14 +351,15 @@ export function MedicoDashboard() {
         setPacienteSelecionado(null);
         setTelaAtiva('pacientes');
         showMensagem(`Paciente ${paciente.nome} aceito com sucesso!`);
-        pacientesApi.atualizarStatus(paciente.id, 'EM_ATENDIMENTO', `Aceito por Dr(a). ${usuarioLogado}`).catch(() => {});
+        pacientesApi.atualizarStatus(paciente.id, 'EM_ATENDIMENTO', `Aceito por Dr(a). ${usuarioLogado}`)
+          .catch(err => console.error('Falha ao sincronizar status do paciente aceito:', err));
       } else {
         setMeusPacientes(prev => prev.filter(p => p.id !== paciente.id));
         setAgendamentos(prev => prev.filter(a => a.paciente.nome !== paciente.nome));
         apiFetch(`/pacientes?cidade=${cidadeAtiva}`)
           .then(r => r.json())
           .then(data => { if (Array.isArray(data)) setPacientes(data.map(mapearPaciente)); })
-          .catch(() => {});
+          .catch(err => console.error('Falha ao recarregar a fila após encerrar atendimento:', err));
         showMensagem(`Atendimento de ${paciente.nome} encerrado. Paciente retornou à fila.`, 4000);
       }
     } catch {
