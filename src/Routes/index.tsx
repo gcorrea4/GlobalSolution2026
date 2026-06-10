@@ -22,6 +22,7 @@ import { ApoloniasDoBem } from '../pages/ApoloniasDoBem';
 import { Integrantes } from '../pages/Integrantes';
 import { Consultas } from '../pages/Consultas';
 import { Regioes } from '../pages/Regioes';
+import { NotFound } from '../pages/NotFound';
 import { ScrollToTop } from '../components/ScrollToTop';
 
 function PublicLayout() {
@@ -57,6 +58,9 @@ export function AppRoutes() {
           <Route path="/Calculadora/Score" element={<CalculadoraScore />} />
           <Route path="/FormularioContato" element={<FormularioContato />} />
           <Route path="/prontuario/:nome"  element={<Prontuario />} />
+
+          {/* ── Catch-all 404 (mantém Header/Footer) ── */}
+          <Route path="*"                  element={<NotFound />} />
         </Route>
 
         {/* ── Rota pública de acompanhamento de consulta (sem login) ── */}
