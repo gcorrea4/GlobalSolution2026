@@ -13,33 +13,53 @@ interface UseCepReturn {
   erro: string;
 }
 
+interface ResultadoCep {
+  cep: string;
+  dados: CepDados | null;
+  erro: string;
+}
+
 export function useCep(cep: string): UseCepReturn {
-  const [dados, setDados] = useState<CepDados | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [erro, setErro] = useState('');
+  const cepLimpo = cep.replace(/\D/g, '');
+  const cepValido = cepLimpo.length === 8;
+
+  const [resultado, setResultado] = useState<ResultadoCep | null>(null);
 
   useEffect(() => {
-    const cepLimpo = cep.replace(/\D/g, '');
-    if (cepLimpo.length !== 8) {
-      setDados(null);
-      setErro('');
-      return;
-    }
-    setLoading(true);
-    setErro('');
-    setDados(null);
+    if (!cepValido) return;
+    let cancelado = false;
+
     fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`)
       .then(res => res.json())
       .then(data => {
+        if (cancelado) return;
         if (data.erro) {
-          setErro('CEP não encontrado.');
+          setResultado({ cep: cepLimpo, dados: null, erro: 'CEP não encontrado.' });
         } else {
-          setDados({ logradouro: data.logradouro, bairro: data.bairro, localidade: data.localidade, uf: data.uf });
+          setResultado({
+            cep: cepLimpo,
+            dados: { logradouro: data.logradouro, bairro: data.bairro, localidade: data.localidade, uf: data.uf },
+            erro: '',
+          });
         }
       })
-      .catch(() => setErro('Erro ao buscar o CEP. Verifique sua conexão.'))
-      .finally(() => setLoading(false));
-  }, [cep]);
+      .catch(() => {
+        if (!cancelado) setResultado({ cep: cepLimpo, dados: null, erro: 'Erro ao buscar o CEP. Verifique sua conexão.' });
+      });
 
-  return { dados, loading, erro };
+    return () => { cancelado = true; };
+  }, [cepLimpo, cepValido]);
+
+  // Estado derivado em vez de setState sincrono no efeito (evita cascading
+  // renders). Comportamento identico ao anterior: enquanto um CEP valido nao
+  // tiver resultado proprio, loading=true; CEP incompleto nao expoe resultado
+  // anterior (dados=null, erro=''). A flag `cancelado` ainda descarta respostas
+  // de CEPs antigos quando o usuario continua digitando.
+  const resolvido = cepValido && resultado?.cep === cepLimpo ? resultado : null;
+
+  return {
+    dados: resolvido ? resolvido.dados : null,
+    loading: cepValido && !resolvido,
+    erro: resolvido ? resolvido.erro : '',
+  };
 }
