@@ -46,6 +46,7 @@ interface OfertaAgendamento {
 
 interface TriagemFormData {
   especialidade: string;
+  sintomaPrincipal: string;
   urgencia: 'ALTA' | 'MEDIA' | 'BAIXA';
   sintomas: string;
   telefone: string;
@@ -157,6 +158,7 @@ export function PacienteDashboard() {
     const payload = {
       nome: usuarioLogado,
       especialidade: data.especialidade,
+      sintomaPrincipal: data.sintomaPrincipal,
       urgencia: data.urgencia,
       sintomas: data.sintomas,
       pais: pacienteInfo.pais || 'Brasil',
@@ -676,6 +678,26 @@ export function PacienteDashboard() {
                           <option value="Neurologia">Neurologia</option>
                         </select>
                         {errors.especialidade && <span className="text-red-400 text-xs mt-1 block">{errors.especialidade.message}</span>}
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-slate-300 mb-1">
+                          Sintoma Principal
+                        </label>
+                        <select
+                          {...register('sintomaPrincipal', { required: true })}
+                          className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white"
+                        >
+                          <option value="">Selecione...</option>
+                          <option value="Dor no peito">Dor no peito</option>
+                          <option value="Febre alta">Febre alta</option>
+                          <option value="Dor abdominal">Dor abdominal</option>
+                          <option value="Fratura">Fratura</option>
+                          <option value="Infecção">Infecção</option>
+                          <option value="Tontura">Tontura</option>
+                          <option value="Dificuldade respiratória">Dificuldade respiratória</option>
+                          <option value="Dor crônica">Dor crônica</option>
+                        </select>
                       </div>
 
                       <div>
