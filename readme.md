@@ -62,6 +62,8 @@ As URLs de cada API são configuráveis por variáveis de ambiente (`VITE_API_UR
 | 🩺 **API de Risco (Python · Render)** | repositório `estelar-risco-api` |
 | 🧠 **API de IA (Python · Render)** | repositório `estelar-ia-api` |
 
+> ⏰ **Atenção ao testar a Calculadora de Risco e a Triagem IA:** essas duas funções dependem de APIs Python hospedadas no plano gratuito do **Render**, que hiberna após ~15 min sem uso. A **primeira** chamada pode levar **~40-60s** para "acordar" o servidor; depois fica instantâneo. Se der erro de "serviço indisponível" na primeira tentativa, aguarde ~40s e tente de novo. Para rodar essas APIs na sua própria máquina, veja os READMEs dos repositórios `estelar-risco-api` e `estelar-ia-api`.
+
 ---
 
 ## 🔑 Credenciais de Acesso para Avaliação
