@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Activity, Users, MapPin, ArrowRight, Satellite, ChevronDown } from 'lucide-react';
+import { Activity, Users, MapPin, ArrowRight, Satellite, ChevronDown, Brain, Zap } from 'lucide-react';
 
 export function Home() {
   const metrics = [
@@ -149,13 +149,97 @@ export function Home() {
       </section>
 
       {/* ═══════════════════════════════════════════════════
+          FERRAMENTAS — PYTHON + IA
+      ═══════════════════════════════════════════════════ */}
+      <section className="bg-[#0a0f1e] border-y border-slate-800 py-28 px-6">
+        <div className="max-w-6xl mx-auto">
+          <p className="text-sky-500 text-[11px] font-bold uppercase tracking-[4px] mb-4">
+            Tecnologia em ação
+          </p>
+          <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight mb-4 max-w-2xl">
+            Algoritmos reais.<br />
+            <span className="text-sky-500">Resultados concretos.</span>
+          </h2>
+          <p className="text-slate-400 text-lg mb-14 max-w-xl leading-relaxed">
+            Experimente as ferramentas desenvolvidas para o projeto — um motor de triagem em Python e modelos de machine learning reais para classificação de urgência.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            {/* Card — Calculadora de Risco (Python) */}
+            <Link
+              to="/calculadora-risco"
+              className="group relative bg-[#030712] border border-slate-800 hover:border-sky-500/50 rounded-2xl p-8 transition-all duration-300 hover:shadow-[0_0_40px_rgba(14,165,233,0.08)] overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 w-48 h-48 bg-sky-500/[0.03] rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-sky-500/[0.07] transition-all" />
+              <div className="relative z-10">
+                <div className="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center mb-6 group-hover:bg-sky-500/20 transition-colors">
+                  <Activity size={22} className="text-sky-400" />
+                </div>
+                <p className="text-sky-500 text-[10px] font-black uppercase tracking-[3px] mb-2">Python · AstraCare</p>
+                <h3 className="text-2xl font-black text-white mb-3">Calculadora de Risco Clínico</h3>
+                <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                  Insira sinais vitais, sintomas e contexto geográfico. O algoritmo AstraCare retorna o nível de risco — EMERGÊNCIA, URGENTE, ATENÇÃO ou BAIXO — com alertas e conduta recomendada.
+                </p>
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {['Sinais Vitais', 'Sintomas', 'Contexto Remoto', 'Conduta'].map(tag => (
+                    <span key={tag} className="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 text-xs font-semibold">{tag}</span>
+                  ))}
+                </div>
+                <span className="inline-flex items-center gap-2 text-sky-400 font-bold text-sm group-hover:gap-3 transition-all">
+                  Abrir calculadora <ArrowRight size={16} />
+                </span>
+              </div>
+            </Link>
+
+            {/* Card — Triagem com IA (ML) */}
+            <Link
+              to="/triagem-ia"
+              className="group relative bg-[#030712] border border-slate-800 hover:border-purple-500/50 rounded-2xl p-8 transition-all duration-300 hover:shadow-[0_0_40px_rgba(168,85,247,0.08)] overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 w-48 h-48 bg-purple-500/[0.03] rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-purple-500/[0.07] transition-all" />
+              <div className="relative z-10">
+                <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-6 group-hover:bg-purple-500/20 transition-colors">
+                  <Brain size={22} className="text-purple-400" />
+                </div>
+                <p className="text-purple-400 text-[10px] font-black uppercase tracking-[3px] mb-2">Machine Learning · OrbitalCare IA</p>
+                <h3 className="text-2xl font-black text-white mb-3">Triagem Inteligente com IA</h3>
+                <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                  Modelos treinados com dados de telemedicina remota. Classifica urgência (ALTA / MÉDIA / BAIXA) com probabilidades e estima o tempo de espera até o atendimento.
+                </p>
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {['Random Forest', 'Regressão', '8 Regiões', 'Tempo de Espera'].map(tag => (
+                    <span key={tag} className="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 text-xs font-semibold">{tag}</span>
+                  ))}
+                </div>
+                <span className="inline-flex items-center gap-2 text-purple-400 font-bold text-sm group-hover:gap-3 transition-all">
+                  Abrir triagem <ArrowRight size={16} />
+                </span>
+              </div>
+            </Link>
+
+          </div>
+
+          {/* Badge Python + IA */}
+          <div className="mt-10 flex flex-wrap gap-4 items-center">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 border border-slate-800 text-slate-400 text-xs font-semibold">
+              <Zap size={13} className="text-sky-500" /> Triagem AstraCare · resposta instantânea
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 border border-slate-800 text-slate-400 text-xs font-semibold">
+              <Brain size={13} className="text-purple-400" /> OrbitalCare IA · modelos de Machine Learning
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════
           DEPOIMENTO
       ═══════════════════════════════════════════════════ */}
       <section className="bg-[#0a0f1e] border-y border-slate-800 py-28 px-6">
         <div className="max-w-2xl mx-auto text-center">
           <p className="text-sky-500 font-black text-7xl leading-none mb-6 select-none">"</p>
           <p className="text-white text-xl md:text-2xl font-medium leading-relaxed mb-8">
-            A teleconsulta via OrbitalCare foi a única forma de eu ter acesso a um médico aqui no interior.
+            A teleconsulta via Estelar foi a única forma de eu ter acesso a um médico aqui no interior do Pará.
           </p>
           <div className="w-12 h-px bg-slate-700 mx-auto mb-5" />
           <p className="text-slate-400 text-sm font-semibold tracking-wide">

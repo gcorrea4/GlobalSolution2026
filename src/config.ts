@@ -17,3 +17,19 @@
 export const API_URL = (import.meta.env.VITE_API_URL || 'https://app-orbitalcare-api.azurewebsites.net')
   .replace(/^\uFEFF/, '') // remove BOM do Windows
   .trim();
+
+/**
+ * API de c\u00E1lculo de risco cl\u00EDnico (AstraCare) \u2014 Python/Flask hospedado no Render.
+ * Sobrescreva com VITE_RISCO_API_URL no .env / Vercel se a URL do Render for outra.
+ */
+export const RISCO_API_URL = (import.meta.env.VITE_RISCO_API_URL || 'https://estelar-risco-api.onrender.com')
+  .replace(/^\uFEFF/, '')
+  .trim();
+
+/**
+ * API de IA (OrbitalCare) \u2014 modelos scikit-learn em Python/Flask hospedados no Render.
+ * Sobrescreva com VITE_IA_API_URL no .env / Vercel se a URL do Render for outra.
+ */
+export const IA_API_URL = (import.meta.env.VITE_IA_API_URL || 'https://estelar-ia-api.onrender.com')
+  .replace(/^\uFEFF/, '')
+  .trim();

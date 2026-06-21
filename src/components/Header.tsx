@@ -32,13 +32,15 @@ export function Header() {
     }`;
 
   const navLinks = [
-    { to: '/',             label: 'Início' },
-    { to: '/sobre',        label: 'Sobre' },
-    { to: '/apolonias',    label: 'Missões de Saúde' },
-    { to: '/regioes',      label: 'Regiões' },
-    { to: '/consultas',    label: 'Consultas' },
-    { to: '/integrantes',  label: 'Equipe' },
-    { to: '/faq',          label: 'FAQ' },
+    { to: '/',                   label: 'Início' },
+    { to: '/sobre',              label: 'Sobre' },
+    { to: '/apolonias',          label: 'Missões de Saúde' },
+    { to: '/regioes',            label: 'Regiões' },
+    { to: '/consultas',          label: 'Consultas' },
+    { to: '/calculadora-risco',  label: 'Calc. Risco' },
+    { to: '/triagem-ia',         label: 'Triagem IA' },
+    { to: '/integrantes',        label: 'Equipe' },
+    { to: '/faq',                label: 'FAQ' },
   ];
 
   return (
@@ -53,7 +55,7 @@ export function Header() {
             style={{ fontFamily: '"Arial Black", Arial, sans-serif' }}
           >
             <Satellite size={20} className="text-[#0EA5E9]" />
-            OrbitalCare
+            Estelar
           </Link>
         </div>
 
@@ -137,7 +139,7 @@ export function Header() {
         <div className="flex justify-between items-center border-b border-gray-100 dark:border-slate-700 px-6 py-5">
           <div className="flex items-center gap-2">
             <Satellite size={18} className="text-[#0EA5E9]" />
-            <span className="font-black text-gray-900 dark:text-white">OrbitalCare</span>
+            <span className="font-black text-gray-900 dark:text-white">Estelar</span>
           </div>
           <button onClick={() => setIsMenuOpen(false)} className="text-gray-400 hover:text-red-500 transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">

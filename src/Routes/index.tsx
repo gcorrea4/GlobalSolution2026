@@ -22,6 +22,8 @@ import { ApoloniasDoBem } from '../pages/ApoloniasDoBem';
 import { Integrantes } from '../pages/Integrantes';
 import { Consultas } from '../pages/Consultas';
 import { Regioes } from '../pages/Regioes';
+import { CalculadoraRisco } from '../pages/CalculadoraRisco';
+import { TriagemIA } from '../pages/TriagemIA';
 import { NotFound } from '../pages/NotFound';
 import { ScrollToTop } from '../components/ScrollToTop';
 
@@ -51,6 +53,8 @@ export function AppRoutes() {
           <Route path="/contato"           element={<Contato />} />
           <Route path="/consultas"         element={<Consultas />} />
           <Route path="/regioes"           element={<Regioes />} />
+          <Route path="/calculadora-risco" element={<CalculadoraRisco />} />
+          <Route path="/triagem-ia"        element={<TriagemIA />} />
           <Route path="/apolonias"         element={<ApoloniasDoBem />} />
           <Route path="/formulario"        element={<Formulario />} />
           <Route path="/cadastro"          element={<Cadastro />} />

@@ -1,4 +1,4 @@
-# 🛰️ OrbitalCare — Saúde Acessível Onde o Sinal Chega
+# 🛰️ Estelar — Saúde Acessível Onde o Sinal Chega
 
 ![Status](https://img.shields.io/static/v1?label=STATUS&message=GLOBAL%20SOLUTION%202026%2F1&color=0EA5E9&style=for-the-badge)
 ![React](https://img.shields.io/badge/React-19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
@@ -11,11 +11,42 @@
 
 ## 📡 Título e Descrição
 
-**OrbitalCare** é uma plataforma de telemedicina via satélite desenvolvida como solução para a **Global Solution 2026/1 da FIAP**, com o tema *Economia Espacial*. A proposta conecta médicos voluntários a pacientes em regiões remotas e isoladas do Brasil, utilizando conectividade via satélite como infraestrutura base.
+**Estelar** é uma plataforma de telemedicina via satélite desenvolvida como solução para a **Global Solution 2026/1 da FIAP**, com o tema *Economia Espacial*. A proposta conecta médicos voluntários a pacientes em regiões remotas e isoladas do Brasil, utilizando conectividade via satélite como infraestrutura base.
 
-Mais de 33 milhões de brasileiros vivem em municípios com menos de um médico por mil habitantes. O OrbitalCare nasce para eliminar essa barreira geográfica, oferecendo triagem inteligente por urgência clínica e teleconsultas acessíveis, gratuitas e integradas com IA.
+Mais de 33 milhões de brasileiros vivem em municípios com menos de um médico por mil habitantes. O Estelar nasce para eliminar essa barreira geográfica, oferecendo triagem inteligente por urgência clínica e teleconsultas acessíveis, gratuitas e integradas com IA.
 
 A aplicação foi desenvolvida em **React + Vite + TypeScript** com integração à API REST Java (Quarkus) hospedada no Azure e banco de dados Oracle.
+
+---
+
+## 🧩 Arquitetura da Plataforma (tudo integrado)
+
+O Estelar é composto por **quatro serviços** que conversam entre si. O frontend é o ponto central e consome três back-ends via `fetch`:
+
+```
+┌─────────────────────────────────────────────┐
+│            Frontend (Estelar)               │
+│         React + Vite · Vercel               │
+└───┬───────────────┬───────────────┬─────────┘
+    │ fetch         │ fetch         │ fetch
+    ▼               ▼               ▼
+┌─────────┐   ┌─────────────┐   ┌──────────────┐
+│ Java    │   │ 🩺 Risco    │   │ 🧠 IA        │
+│ Quarkus │   │ Flask       │   │ Flask+sklearn│
+│ Azure   │   │ Render      │   │ Render       │
+│ login,  │   │ Calculadora │   │ Triagem      │
+│ tickets │   │ de Risco    │   │ Inteligente  │
+└─────────┘   └─────────────┘   └──────────────┘
+```
+
+| Serviço | Tecnologia | Hospedagem | O que faz no site |
+|---|---|---|---|
+| **Frontend** | React + Vite + TS | Vercel | Toda a interface |
+| **Backend** | Java + Quarkus + Oracle | Azure | Login, pacientes, médicos, tickets |
+| **API de Risco** | Python + Flask | Render | Página **Calculadora de Risco** |
+| **API de IA** | Python + Flask + scikit-learn | Render | Página **Triagem IA** |
+
+As URLs de cada API são configuráveis por variáveis de ambiente (`VITE_API_URL`, `VITE_RISCO_API_URL`, `VITE_IA_API_URL`) — veja [`src/config.ts`](src/config.ts).
 
 ---
 
@@ -28,6 +59,8 @@ A aplicação foi desenvolvida em **React + Vite + TypeScript** com integração
 | 🎥 **Vídeo de apresentação (YouTube)** | https://youtu.be/iEcwR9XBZ88 |
 | ⚙️ **API Java (Azure)** | https://app-orbitalcare-api.azurewebsites.net |
 | 📋 **Swagger UI** | https://app-orbitalcare-api.azurewebsites.net/q/swagger-ui |
+| 🩺 **API de Risco (Python · Render)** | repositório `estelar-risco-api` |
+| 🧠 **API de IA (Python · Render)** | repositório `estelar-ia-api` |
 
 ---
 
@@ -108,6 +141,8 @@ npm run check       # tsc + eslint + vitest (pipeline completa)
 - 🔐 **Autenticação por perfil** — admin, médico e paciente, com `ProtectedRoute` validando sessão e role antes de renderizar cada dashboard.
 - 📋 **Cadastro de pacientes** com seleção de especialidade necessária, descrição de sintomas e nível de urgência.
 - 🏥 **Triagem inteligente** — algoritmo que prioriza pacientes por urgência clínica e especialidade necessária.
+- 🩺 **Calculadora de Risco Clínico** (`/calculadora-risco`) — integra a API Python **AstraCare**; recebe sinais vitais, sintomas e contexto e retorna o nível de risco (EMERGÊNCIA/URGENTE/ATENÇÃO/BAIXO) com conduta recomendada.
+- 🧠 **Triagem com IA** (`/triagem-ia`) — integra a API Python **OrbitalCare IA**; usa modelos de Machine Learning (scikit-learn) para classificar urgência e estimar tempo de espera.
 - 🗺️ **Mapa interativo (Leaflet)** com heatmap de pacientes por região e cobertura satelital.
 - 📊 **Dashboard Admin** com métricas operacionais, listagem de médicos e pacientes, exportação de relatórios em PDF e CSV.
 - 👨‍⚕️ **Dashboard Médico** — fila priorizada, aceitação de pacientes, teleconsultas e prontuário.

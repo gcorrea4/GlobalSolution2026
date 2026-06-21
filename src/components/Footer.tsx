@@ -8,13 +8,13 @@ export function Footer() {
 
       <div className="max-w-[1200px] w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[40px] mb-[40px]">
 
-        {/* 1. OrbitalCare */}
+        {/* 1. Estelar */}
         <div className="flex flex-col items-start">
           <h3 className="text-[#0EA5E9] text-[1.3rem] mt-0 mb-[15px] font-bold">
-            OrbitalCare
+            Estelar
           </h3>
           <p className="text-white/60 leading-[1.6] text-[0.9rem] m-0">
-            Conectando médicos e pacientes em regiões remotas via telemedicina por satélite.
+            Conectando médicos e pacientes em regiões remotas via telemedicina por satélite. Com IA e triagem clínica inteligente.
           </p>
           <Link
             to="/consultas"
@@ -34,9 +34,11 @@ export function Footer() {
             <li><Link to="/apolonias"   className="text-white/60 text-[0.95rem] transition-colors hover:text-[#0EA5E9]">Missões de Saúde</Link></li>
             <li><Link to="/consultas"   className="text-white/60 text-[0.95rem] transition-colors hover:text-[#0EA5E9]">Consultas</Link></li>
             <li><Link to="/regioes"     className="text-white/60 text-[0.95rem] transition-colors hover:text-[#0EA5E9]">Regiões Atendidas</Link></li>
-            <li><Link to="/faq"         className="text-white/60 text-[0.95rem] transition-colors hover:text-[#0EA5E9]">FAQ</Link></li>
-            <li><Link to="/contato"     className="text-white/60 text-[0.95rem] transition-colors hover:text-[#0EA5E9]">Contato</Link></li>
-            <li><Link to="/login"       className="text-white/60 text-[0.95rem] transition-colors hover:text-[#0EA5E9]">Login</Link></li>
+            <li><Link to="/faq"                className="text-white/60 text-[0.95rem] transition-colors hover:text-[#0EA5E9]">FAQ</Link></li>
+            <li><Link to="/contato"            className="text-white/60 text-[0.95rem] transition-colors hover:text-[#0EA5E9]">Contato</Link></li>
+            <li><Link to="/login"              className="text-white/60 text-[0.95rem] transition-colors hover:text-[#0EA5E9]">Login</Link></li>
+            <li><Link to="/calculadora-risco"  className="text-[#0EA5E9] text-[0.95rem] font-bold transition-colors hover:text-sky-400">Calc. Risco Clínico</Link></li>
+            <li><Link to="/triagem-ia"         className="text-purple-400 text-[0.95rem] font-bold transition-colors hover:text-purple-300">Triagem com IA</Link></li>
           </ul>
         </div>
 
@@ -62,7 +64,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-white/10 pt-[20px] text-center text-white/40 text-[0.85rem]">
-        <p className="m-0">&copy; 2026 OrbitalCare — Global Solution FIAP 2026/1. Projeto acadêmico sem fins lucrativos.</p>
+        <p className="m-0">&copy; 2026 Estelar · Global Solution FIAP 2026/1 — Projeto acadêmico sem fins lucrativos.</p>
       </div>
     </footer>
   );
