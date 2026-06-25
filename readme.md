@@ -251,15 +251,6 @@ A aplicação consome a API REST desenvolvida na disciplina **Domain Driven Desi
 
 ---
 
-## 👥 Autores e Créditos — Equipe 1TDSPB
-
-| Foto | Nome | RM | Turma | GitHub | LinkedIn |
-|:---:|---|:---:|:---:|:---:|:---:|
-| <img src="src/img/foto-correa.jpg" width="60" style="border-radius:50%"/> | **Gabriel Correa** | 567903 | 1TDSPB | [@gcorrea4](https://github.com/gcorrea4) | [LinkedIn](https://www.linkedin.com/in/gabriel-correa-souza-763135271/) |
-| <img src="src/img/foto-kay.jpg" width="60" style="border-radius:50%"/> | **Kayque Duarte** | 567980 | 1TDSPB | [@Kayque2012](https://github.com/Kayque2012) | [LinkedIn](https://www.linkedin.com/in/kayque-duarte-b24313361/) |
-| <img src="src/img/foto-eric.jpg" width="60" style="border-radius:50%"/> | **Eric Maciel** | 567398 | 1TDSPB | [@Eric-devops-tech](https://github.com/Eric-devops-tech) | [LinkedIn](https://www.linkedin.com/in/eric-maciel-144058389/) |
-
----
 
 ## 📬 Contato
 
